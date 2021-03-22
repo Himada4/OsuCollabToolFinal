@@ -1,0 +1,5 @@
+SongsFolder=C:\Users\juliu\Desktop\Osu!\Songs
+Theme=34,34,34;46,209,172;192,192,192
+ButtonOrder=3,1,2,4
+CurrentFolder=\1338062 Camellia - Alone intelligence
+CurrentOsu=\Camellia - Alone intelligence (Elzy) [OneShotFox's Normal].osu
