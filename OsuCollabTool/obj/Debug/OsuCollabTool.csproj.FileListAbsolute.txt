@@ -35,3 +35,5 @@ D:\Coding\OsuCollabTool\OsuCollabTool\OsuCollabTool\obj\Debug\OsuCollabTool.Main
 D:\Coding\OsuCollabTool\OsuCollabTool\OsuCollabTool\obj\Debug\OsuCollabTool.Main_Classes.MergerFunc.CompareIntf.resources
 D:\Coding\OsuCollabTool\OsuCollabTool\OsuCollabTool\obj\Debug\OsuCollabTool.Main_Classes.MappingFunc.PatternBank.resources
 D:\Coding\OsuCollabTool\OsuCollabTool\OsuCollabTool\obj\Debug\OsuCollabTool.Main_Classes.MergerFunc.uTimingPointsManager.resources
+D:\Coding\OsuCollabTool\OsuCollabTool\OsuCollabTool\obj\Debug\OsuCollabTool.Main_Classes.MergerFunc.CompareLog.resources
+D:\Coding\OsuCollabTool\OsuCollabTool\OsuCollabTool\obj\Debug\OsuCollabTool.Main_Classes.MergerFunc.SeperatorIntf.resources

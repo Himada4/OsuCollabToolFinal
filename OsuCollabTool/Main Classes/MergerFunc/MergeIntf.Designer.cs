@@ -35,10 +35,10 @@
             this.t2 = new System.Windows.Forms.TableLayoutPanel();
             this.l2 = new System.Windows.Forms.Label();
             this.t3 = new System.Windows.Forms.TableLayoutPanel();
+            this.ToMerge = new System.Windows.Forms.ListBox();
             this.t4 = new System.Windows.Forms.TableLayoutPanel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.FromFolder = new System.Windows.Forms.ListBox();
-            this.ToMerge = new System.Windows.Forms.ListBox();
             this.MergeButton = new System.Windows.Forms.Button();
             this.MainIntf.SuspendLayout();
             this.t1.SuspendLayout();
@@ -111,7 +111,7 @@
             this.l2.Name = "l2";
             this.l2.Size = new System.Drawing.Size(368, 109);
             this.l2.TabIndex = 1;
-            this.l2.Text = "Files to merge";
+            this.l2.Text = "Files to Merge";
             this.l2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // t3
@@ -131,6 +131,18 @@
             this.t3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.t3.Size = new System.Drawing.Size(748, 249);
             this.t3.TabIndex = 1;
+            // 
+            // ToMerge
+            // 
+            this.ToMerge.AllowDrop = true;
+            this.ToMerge.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ToMerge.FormattingEnabled = true;
+            this.ToMerge.Location = new System.Drawing.Point(415, 3);
+            this.ToMerge.Name = "ToMerge";
+            this.ToMerge.Size = new System.Drawing.Size(330, 243);
+            this.ToMerge.TabIndex = 2;
+            this.ToMerge.DragDrop += new System.Windows.Forms.DragEventHandler(this.ToMerge_DragDrop);
+            this.ToMerge.DragEnter += new System.Windows.Forms.DragEventHandler(this.ToMerge_DragEnter);
             // 
             // t4
             // 
@@ -169,18 +181,6 @@
             this.FromFolder.Size = new System.Drawing.Size(329, 243);
             this.FromFolder.TabIndex = 1;
             this.FromFolder.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FromFolder_MouseDown);
-            // 
-            // ToMerge
-            // 
-            this.ToMerge.AllowDrop = true;
-            this.ToMerge.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ToMerge.FormattingEnabled = true;
-            this.ToMerge.Location = new System.Drawing.Point(415, 3);
-            this.ToMerge.Name = "ToMerge";
-            this.ToMerge.Size = new System.Drawing.Size(330, 243);
-            this.ToMerge.TabIndex = 2;
-            this.ToMerge.DragDrop += new System.Windows.Forms.DragEventHandler(this.ToMerge_DragDrop);
-            this.ToMerge.DragEnter += new System.Windows.Forms.DragEventHandler(this.ToMerge_DragEnter);
             // 
             // MergeButton
             // 

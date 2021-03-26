@@ -105,6 +105,12 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
 
                 MergeButton.Text = "Merge!";
             }
+            else
+            {
+                MergeButton.Text = "Error";
+                MessageBox.Show(exc.Message);
+                MergeButton.Text = "Merge!";
+            }
 
         }
 
@@ -123,8 +129,8 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
             
 
             List<List<string>> allTimingPoints = new List<List<string>>();
-            List<List<string>> HitObjects = new List<List<string>>();
-            Exception operationCancelled = new Exception();
+            List<List<string>> allHitObjects = new List<List<string>>();
+            
 
             foreach(var fileDir in fileDirs)
             {
@@ -139,7 +145,7 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
                 List<string> tempHit = map.GetHitObjString();
                 tempHit.RemoveAt(0);
                 tempHit.RemoveAt(tempHit.Count - 1);
-                HitObjects.Add(tempHit);
+                allHitObjects.Add(tempHit);
             }
 
             List<List<string>> allUTimingPoints = GetUP(allTimingPoints);
@@ -151,17 +157,17 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
                 {
                     allTimingPoints = EBox.newTimingPoint;
                     
-                    StartMerge(HitObjects, allTimingPoints);
+                    StartMerge(allHitObjects, allTimingPoints);
                 }
                 else if (EBox.DialogResult == DialogResult.OK)
                 {
                     allTimingPoints = EBox.newTimingPoint;
                     
-                    StartMerge(HitObjects, allTimingPoints);
+                    StartMerge(allHitObjects, allTimingPoints);
                 }
                 else
                 {
-                    operationCancelled = ExceptionsHandling.operationCancelled;
+                    exc = ExceptionsHandling.operationCancelled;
                 }
             }
 

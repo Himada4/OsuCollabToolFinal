@@ -127,6 +127,12 @@
     <Compile Include="Main Classes\MergerFunc\CompareIntf.Designer.cs">
       <DependentUpon>CompareIntf.cs</DependentUpon>
     </Compile>
+    <Compile Include="Main Classes\MergerFunc\CompareLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main Classes\MergerFunc\CompareLog.Designer.cs">
+      <DependentUpon>CompareLog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Main Classes\MergerFunc\MergeIntf.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -195,8 +201,14 @@
     <EmbeddedResource Include="Main Classes\MergerFunc\CompareIntf.resx">
       <DependentUpon>CompareIntf.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Main Classes\MergerFunc\CompareLog.resx">
+      <DependentUpon>CompareLog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Main Classes\MergerFunc\MergeIntf.resx">
       <DependentUpon>MergeIntf.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main Classes\MergerFunc\SeperatorIntf.resx">
+      <DependentUpon>SeperatorIntf.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main Classes\MergerFunc\uTimingPointsManager.resx">
       <DependentUpon>uTimingPointsManager.cs</DependentUpon>
