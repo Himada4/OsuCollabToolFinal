@@ -195,6 +195,12 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Main Classes\HitsoundingFunc\HitObjIntf.resx">
+      <DependentUpon>HitObjIntf.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main Classes\HitsoundingFunc\VolumeToolIntf.resx">
+      <DependentUpon>VolumeToolIntf.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Main Classes\MappingFunc\PatternBank.resx">
       <DependentUpon>PatternBank.cs</DependentUpon>
     </EmbeddedResource>

@@ -35,3 +35,5 @@ D:\Coding\OsuCollabTool\OsuCollabTool\OsuCollabTool\obj\Release\OsuCollabTool.cs
 D:\Coding\OsuCollabTool\OsuCollabTool\OsuCollabTool\obj\Release\OsuCollabTool.csproj.CopyComplete
 D:\Coding\OsuCollabTool\OsuCollabTool\OsuCollabTool\obj\Release\OsuCollabTool.exe
 D:\Coding\OsuCollabTool\OsuCollabTool\OsuCollabTool\obj\Release\OsuCollabTool.pdb
+D:\Coding\OsuCollabTool\OsuCollabTool\OsuCollabTool\obj\Release\OsuCollabTool.Main_Classes.MergerFunc.CompareLog.resources
+D:\Coding\OsuCollabTool\OsuCollabTool\OsuCollabTool\obj\Release\OsuCollabTool.Main_Classes.MergerFunc.SeperatorIntf.resources

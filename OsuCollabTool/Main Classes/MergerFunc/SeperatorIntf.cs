@@ -12,7 +12,7 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
 {
     public partial class SeperatorIntf : Form
     {
-        private string audioDir = "";
+        
         private int totalTime = 0;
         private string dir = "";
 
@@ -30,6 +30,8 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
             Common.ContrastColor(Theme[1], SeperateBtn);
             Common.ContrastColor(Theme[2], l1, l2, l3, l4, l5, l6, l7, MaxDurStart, MaxDurUntil);
             dir = $@"{ext.getSongFol()}{ext.getCurrFol()}\{ext.getCurrOsu()}";
+            string audioDir = "";
+
 
             foreach (string file in files)
             {
