@@ -304,7 +304,7 @@
             // MaxDurStart
             // 
             this.MaxDurStart.AutoSize = true;
-            this.MaxDurStart.Location = new System.Drawing.Point(519, 74);
+            this.MaxDurStart.Location = new System.Drawing.Point(519, 83);
             this.MaxDurStart.Name = "MaxDurStart";
             this.MaxDurStart.Size = new System.Drawing.Size(34, 13);
             this.MaxDurStart.TabIndex = 6;
@@ -322,7 +322,7 @@
             // l4
             // 
             this.l4.AutoSize = true;
-            this.l4.Location = new System.Drawing.Point(9, 74);
+            this.l4.Location = new System.Drawing.Point(6, 83);
             this.l4.Name = "l4";
             this.l4.Size = new System.Drawing.Size(34, 13);
             this.l4.TabIndex = 4;
@@ -365,6 +365,7 @@
             this.UntilTb.Name = "UntilTb";
             this.UntilTb.Size = new System.Drawing.Size(100, 20);
             this.UntilTb.TabIndex = 5;
+            this.UntilTb.TextChanged += new System.EventHandler(this.ContentChanged);
             // 
             // SelectFromTb
             // 
@@ -372,6 +373,7 @@
             this.SelectFromTb.Name = "SelectFromTb";
             this.SelectFromTb.Size = new System.Drawing.Size(100, 20);
             this.SelectFromTb.TabIndex = 4;
+            this.SelectFromTb.TextChanged += new System.EventHandler(this.ContentChanged);
             // 
             // UntilTrackBar
             // 
@@ -380,6 +382,7 @@
             this.UntilTrackBar.Name = "UntilTrackBar";
             this.UntilTrackBar.Size = new System.Drawing.Size(547, 45);
             this.UntilTrackBar.TabIndex = 2;
+            this.UntilTrackBar.TickFrequency = 60;
             // 
             // StartTrackBar
             // 
@@ -388,6 +391,7 @@
             this.StartTrackBar.Name = "StartTrackBar";
             this.StartTrackBar.Size = new System.Drawing.Size(547, 45);
             this.StartTrackBar.TabIndex = 1;
+            this.StartTrackBar.TickFrequency = 60;
             // 
             // VolumeToolIntf
             // 

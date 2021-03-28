@@ -21,11 +21,11 @@ namespace OsuCollabTool.CoreClasses
 
             List<string> Data = new List<string>();
 
-            while (line.Contains("[TimingPoints]") == false)
+            while (!line.Contains("[TimingPoints]"))
             {
                 line = sr.ReadLine();
             } 
-            while (line.Contains("[Colours]") == false)
+            while (!line.Contains("[Colours]")  && !line.Contains("[HitObjects]") )
             {
                 Data.Add(line);
                 line = sr.ReadLine();

@@ -14,24 +14,34 @@ namespace OsuCollabTool.CoreClasses
         {
             MapDir = MapDirIn;
         }
+        StreamReader sr;
         public List<string> GetRawData()
         {
-            StreamReader sr = new StreamReader($@"{MapDir}");
-            var line = sr.ReadLine();
-
-            List<string> Data = new List<string>();
-
-            while (line.Contains("[Colours]") == false)
+            try 
             {
-                line = sr.ReadLine();
+                sr = new StreamReader($@"{MapDir}");
+                var line = sr.ReadLine();
+
+                List<string> Data = new List<string>();
+
+                while (!line.Contains("[Colours]"))
+                {
+                    line = sr.ReadLine();
+                }
+                while (!line.Contains("[HitObjects]"))
+                {
+                    Data.Add(line);
+                    line = sr.ReadLine();
+                }
+
+                sr.Close();
+                return Data;
             }
-            while (line.Contains("[HitObjects]") == false)
+            catch
             {
-                Data.Add(line);
-                line = sr.ReadLine();
+                sr.Close();
+                return new List<string>() {""};
             }
-            sr.Close();
-            return Data;
         }
     }
-}
+} 

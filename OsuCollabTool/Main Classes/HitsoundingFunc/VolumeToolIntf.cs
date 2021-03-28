@@ -55,6 +55,9 @@ namespace OsuCollabTool.Main_Classes.HitsoundingFunc
             StartTrackBar.Maximum = totalTime;
             UntilTrackBar.Maximum = totalTime;
 
+            StartTrackBar.TickFrequency = 60 * 1000;
+            UntilTrackBar.TickFrequency = 60 * 1000;
+
             StartTrackBar.Scroll += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, StartTrackBar));
             UntilTrackBar.Scroll += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, UntilTrackBar));
 
@@ -95,7 +98,7 @@ namespace OsuCollabTool.Main_Classes.HitsoundingFunc
         {
             try
             {
-                if ((sender as TextBox).Name == "SeperateFromTb")
+                if ((sender as TextBox).Name == "SelectFromTb")
                 {
                     SelectFromTb.Text = (convertToFormattedOffset(SelectFromTb.Text)).ToString();
 

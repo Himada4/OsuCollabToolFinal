@@ -105,6 +105,7 @@
     <Compile Include="Main Classes\ExceptionsHandling.cs" />
     <Compile Include="Main Classes\HitsoundingFunc\HitObjIntf.cs">
       <SubType>Form</SubType>
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Main Classes\HitsoundingFunc\HitObjIntf.Designer.cs">
       <DependentUpon>HitObjIntf.cs</DependentUpon>
