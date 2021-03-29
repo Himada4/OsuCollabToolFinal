@@ -14,15 +14,15 @@ namespace OsuCollabTool
 {
     public partial class MainInterface : Form
     {
-        private Draggable _move; // Variable used for enabling draggable form
+        private Draggable move; // Variable used for enabling draggable form
 
-        private string SongFolder; // The "Songs" folder
-        private Color[] Theme; // The Colors of the three UI elements; Form border, buttons and the background
-        private int[] ButtonOrder; // The order of the menu category
-        private string CurrentFolder; // The current mapset
-        private string CurrentOsu; // The specific .osu file
+        private string songFolder; // The "Songs" folder
+        private Color[] theme; // The Colors of the three UI elements; Form border, buttons and the background
+        private int[] buttonOrder; // The order of the menu category
+        private string currentFolder; // The current mapset
+        private string currentOsu; // The specific .osu file
 
-        private int DirNullCount = 0; // Variable used for first time uses, when the preferences are all empty
+        private int dirNullCount = 0; // Variable used for first time uses, when the preferences are all empty
 
         public MainInterface()
         {
@@ -31,8 +31,8 @@ namespace OsuCollabTool
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            _move = new Draggable(this, FormBorder.Size.Height); // enables form to be draggable
-            _move.SetMovable(FormBorder, ProjectLabel);
+            move = new Draggable(this, FormBorder.Size.Height); // enables form to be draggable
+            move.SetMovable(FormBorder, ProjectLabel);
             RefreshUI(); // Updates the UI to the current settings of preferences
         }
 
@@ -45,7 +45,7 @@ namespace OsuCollabTool
 
         private void CloseApp_MouseLeave(object sender, EventArgs e)
         {
-            CloseApp.BackColor = Theme[0];
+            CloseApp.BackColor = theme[0];
         }
 
         private void CloseApp_Click(object sender, EventArgs e)
@@ -58,43 +58,46 @@ namespace OsuCollabTool
             this.WindowState = FormWindowState.Minimized;
         }
 
-        private void Pref_Click(object sender, EventArgs e) //https://www.codeproject.com/Questions/557261/HowplustoplusrefreshplusMainplusFormplusinplusC-23
+        private void Pref_Click(object sender, EventArgs e) // https://www.codeproject.com/Questions/557261/HowplustoplusrefreshplusMainplusFormplusinplusC-23
         {
             MainScrMenu.Enabled = false;
             MainIntBG.Controls.Clear();
             Form form = new Preferences();
-            form.FormClosed += new FormClosedEventHandler(prefFormClosed);
+            form.FormClosed += new FormClosedEventHandler(PrefFormClosed);
             form.Show(); // Shows the user the preferences settings
         }
 
-        private void prefFormClosed(object sender, FormClosedEventArgs e) // Executes when preferences settings have been closed, allows a live update without the need to close the application
+        private void PrefFormClosed(object sender, FormClosedEventArgs e) // Executes when preferences settings have been closed, allows a live update without the need to close the application
         {
             RefreshUI();
-            DirNullCount = 0;
+            dirNullCount = 0;
             MainScrMenu.Enabled = true;
         }
 
         private void Backup_Click(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(SongFolder) ||
-                String.IsNullOrEmpty(CurrentFolder) ||
-                String.IsNullOrEmpty(CurrentOsu)) // Makes sure directory is viable
+            // Makes sure directory is viable
+            if (string.IsNullOrEmpty(songFolder) ||
+                string.IsNullOrEmpty(currentFolder) ||
+                string.IsNullOrEmpty(currentOsu)) 
             {
                 MessageBox.Show("Please make sure to input the directories in Preferences!");
             }
             else
             {
-                string[] files = Directory.GetFiles($@"{SongFolder}{CurrentFolder}");
+                string[] files = Directory.GetFiles($@"{songFolder}{currentFolder}");
 
                 List<string> mapset = new List<string>();
 
+                // Looks for every .osu files in the folder used to backup
                 foreach (string file in files)
                 {
-                    if (file.Contains(".osu")) // Looks for every .osu files in the folder used to backup
+                    if (file.Contains(".osu")) 
                     {
-                        mapset.Add($@"{SongFolder}{CurrentFolder}\{Path.GetFileName(file)}");
+                        mapset.Add($@"{songFolder}{currentFolder}\{Path.GetFileName(file)}");
                     }
                 }
+
                 Directory.CreateDirectory(@"Backup");
 
                 foreach (var map in mapset)
@@ -106,133 +109,137 @@ namespace OsuCollabTool
 
         private void RefreshUI() // Updates the UI to the preferences.txt
         {
-            string DirNull = "Please make sure to input the directories in Preferences!";
+            string dirNull = "Please make sure to input the directories in Preferences!";
 
             // Gets map directory and UI information
             UIDataExtractor ext = new UIDataExtractor();
             ext.refresh();
-            SongFolder = ext.getSongFol();
-            Theme = ext.getTheme();
-            ButtonOrder = ext.getButOrd();
-            CurrentFolder = ext.getCurrFol();
-            CurrentOsu = ext.getCurrOsu();
+            songFolder = ext.getSongFol();
+            theme = ext.getTheme();
+            buttonOrder = ext.getButOrd();
+            currentFolder = ext.getCurrFol();
+            currentOsu = ext.getCurrOsu();
 
             // Border of the Form
-            FormBorder.BackColor = Theme[0];
-            Pref.BackColor = Theme[0];
-            Mini.BackColor = Theme[0];
-            CloseApp.BackColor = Theme[0];
-            Backup.BackColor = Theme[0];
-            Common.ContrastColor(Theme[0], ProjectLabel);
+            FormBorder.BackColor = theme[0];
+            Pref.BackColor = theme[0];
+            Mini.BackColor = theme[0];
+            CloseApp.BackColor = theme[0];
+            Backup.BackColor = theme[0];
+            Common.ContrastColor(theme[0], ProjectLabel);
 
             // BG
-            MainIntBG.BackColor = Theme[2];
+            MainIntBG.BackColor = theme[2];
             MainScrMenu.Items.Clear();
 
             // Song Stetup
-            ToolStripMenuItem SongSetup = new ToolStripMenuItem();
-            SongSetup.Text = "SongSetup";
+            ToolStripMenuItem songSetup = new ToolStripMenuItem();
+            songSetup.Text = "SongSetup";
 
             // Map Setup
-            ToolStripMenuItem MapSetup = new ToolStripMenuItem();
-            MapSetup.Text = "Map Setup";
-            MapSetup.Click += (s, e) => { MapSetupIntf childForm = new MapSetupIntf(); openChildForm(childForm); };
-            SongSetup.DropDownItems.Add(MapSetup);
+            ToolStripMenuItem mapSetup = new ToolStripMenuItem();
+            mapSetup.Text = "Map Setup";
+            mapSetup.Click += (s, e) => { MapSetupIntf childForm = new MapSetupIntf(); OpenChildForm(childForm); };
+            songSetup.DropDownItems.Add(mapSetup);
+
             // BPM Detector
-            ToolStripMenuItem BPMDetector = new ToolStripMenuItem();
-            BPMDetector.Text = "BPM Detector";
-            BPMDetector.Click += (s, e) => { BPMDetectorIntf childForm = new BPMDetectorIntf(); openChildForm(childForm); };
-            SongSetup.DropDownItems.Add(BPMDetector);
+            ToolStripMenuItem bpmDetector = new ToolStripMenuItem();
+            bpmDetector.Text = "BPM Detector";
+            bpmDetector.Click += (s, e) => { BPMDetectorIntf childForm = new BPMDetectorIntf(); OpenChildForm(childForm); };
+            songSetup.DropDownItems.Add(bpmDetector);
             // -----
 
             // Merger https://stackoverflow.com/questions/6187944/how-can-i-create-a-dynamic-button-click-event-on-a-dynamic-button
-            ToolStripMenuItem Merger = new ToolStripMenuItem();
-            Merger.Text = "Merger";
+            ToolStripMenuItem merger = new ToolStripMenuItem();
+            merger.Text = "Merger";
 
             // Merge
-            ToolStripMenuItem Merge = new ToolStripMenuItem();
-            Merge.Text = "Merge";
-            Merge.Click += (s, e) => { MergeIntf childForm = new MergeIntf(); openChildForm(childForm); };
-            Merger.DropDownItems.Add(Merge);
+            ToolStripMenuItem merge = new ToolStripMenuItem();
+            merge.Text = "Merge";
+            merge.Click += (s, e) => { MergeIntf childForm = new MergeIntf(); OpenChildForm(childForm); };
+            merger.DropDownItems.Add(merge);
+
             // Compare
-            ToolStripMenuItem Compare = new ToolStripMenuItem();
-            Compare.Text = "Compare";
-            Compare.Click += (s, e) => { CompareIntf childForm = new CompareIntf(); openChildForm(childForm); };
-            Merger.DropDownItems.Add(Compare);
+            ToolStripMenuItem compare = new ToolStripMenuItem();
+            compare.Text = "Compare";
+            compare.Click += (s, e) => { CompareIntf childForm = new CompareIntf(); OpenChildForm(childForm); };
+            merger.DropDownItems.Add(compare);
+
             // Seperate
-            ToolStripMenuItem Seperate = new ToolStripMenuItem();
-            Seperate.Text = "Seperate";
-            Seperate.Click += (s, e) => { SeperatorIntf childForm = new SeperatorIntf(); openChildForm(childForm); };
-            Merger.DropDownItems.Add(Seperate);
+            ToolStripMenuItem seperate = new ToolStripMenuItem();
+            seperate.Text = "Seperate";
+            seperate.Click += (s, e) => { SeperatorIntf childForm = new SeperatorIntf(); OpenChildForm(childForm); };
+            merger.DropDownItems.Add(seperate);
             // -----
 
-            //Hitsounding
-            ToolStripMenuItem Hitsounding = new ToolStripMenuItem();
-            Hitsounding.Text = "Hitsounding";
+            // Hitsounding
+            ToolStripMenuItem hitsounding = new ToolStripMenuItem();
+            hitsounding.Text = "Hitsounding";
 
             // Volume Tool
-            ToolStripMenuItem VolumeTool = new ToolStripMenuItem();
-            VolumeTool.Text = "Volume Tool";
-            VolumeTool.Click += (s, e) => { VolumeToolIntf childForm = new VolumeToolIntf(); openChildForm(childForm); };
-            Hitsounding.DropDownItems.Add(VolumeTool);
+            ToolStripMenuItem volumeTool = new ToolStripMenuItem();
+            volumeTool.Text = "Volume Tool";
+            volumeTool.Click += (s, e) => { VolumeToolIntf childForm = new VolumeToolIntf(); OpenChildForm(childForm); };
+            hitsounding.DropDownItems.Add(volumeTool);
+
             // HitObject Tool
-            ToolStripMenuItem HitObjectTool = new ToolStripMenuItem();
-            HitObjectTool.Text = "HitObject Tool";
-            HitObjectTool.Click += (s, e) => { HitObjIntf childForm = new HitObjIntf(); openChildForm(childForm); };
-            Hitsounding.DropDownItems.Add(HitObjectTool);
+            ToolStripMenuItem hitObjectTool = new ToolStripMenuItem();
+            hitObjectTool.Text = "HitObject Tool";
+            hitObjectTool.Click += (s, e) => { HitObjIntf childForm = new HitObjIntf(); OpenChildForm(childForm); };
+            hitsounding.DropDownItems.Add(hitObjectTool);
             // -----
 
             // Mapping
-            ToolStripMenuItem Mapping = new ToolStripMenuItem();
-            Mapping.Text = "Mapping";
+            ToolStripMenuItem mapping = new ToolStripMenuItem();
+            mapping.Text = "Mapping";
 
-            //Slider Bank
-            ToolStripMenuItem SliderBank = new ToolStripMenuItem();
-            SliderBank.Text = "Pattern Bank";
-            SliderBank.Click += (s, e) => { PatternBank childForm = new PatternBank(); openChildForm(childForm); };
-            Mapping.DropDownItems.Add(SliderBank);
+            // Slider Bank
+            ToolStripMenuItem sliderBank = new ToolStripMenuItem();
+            sliderBank.Text = "Pattern Bank";
+            sliderBank.Click += (s, e) => { PatternBank childForm = new PatternBank(); OpenChildForm(childForm); };
+            mapping.DropDownItems.Add(sliderBank);
             // -----
 
             // Disables the toolstripmenu if the directories are null
-            if (String.IsNullOrEmpty(SongFolder) ||
-                String.IsNullOrEmpty(CurrentFolder) ||
-                String.IsNullOrEmpty(CurrentOsu))
+            if (string.IsNullOrEmpty(songFolder) ||
+                string.IsNullOrEmpty(currentFolder) ||
+                string.IsNullOrEmpty(currentOsu))
             {
-                SongSetup.Enabled = false;
-                Merger.Enabled = false;
-                Hitsounding.Enabled = false;
-                Mapping.Enabled = false;
+                songSetup.Enabled = false;
+                merger.Enabled = false;
+                hitsounding.Enabled = false;
+                mapping.Enabled = false;
             }
 
             // Shows err dialogue when using the program for the first time
             MainScrMenu.MouseEnter += (s, e) =>
             {
-                if (DirNullCount == 0 && (String.IsNullOrEmpty(SongFolder) || String.IsNullOrEmpty(CurrentFolder) || String.IsNullOrEmpty(CurrentOsu)))
+                if (dirNullCount == 0 && (string.IsNullOrEmpty(songFolder) || string.IsNullOrEmpty(currentFolder) || string.IsNullOrEmpty(currentOsu)))
                 {
-                    MessageBox.Show(DirNull);
-                    DirNullCount = DirNullCount + 1;
+                    MessageBox.Show(dirNull);
+                    dirNullCount = dirNullCount + 1;
                 }
             };
 
             // Button Sorting
-            foreach (var item in ButtonOrder)
+            foreach (var item in buttonOrder)
             {
                 switch (item)
                 {
                     case 1:
-                        MainScrMenu.Items.Add(SongSetup);
+                        MainScrMenu.Items.Add(songSetup);
                         break;
 
                     case 2:
-                        MainScrMenu.Items.Add(Merger);
+                        MainScrMenu.Items.Add(merger);
                         break;
 
                     case 3:
-                        MainScrMenu.Items.Add(Hitsounding);
+                        MainScrMenu.Items.Add(hitsounding);
                         break;
 
                     case 4:
-                        MainScrMenu.Items.Add(Mapping);
+                        MainScrMenu.Items.Add(mapping);
                         break;
                 }
             }
@@ -240,10 +247,10 @@ namespace OsuCollabTool
 
         private Form activeForm = null;
 
-        private void openChildForm(Form childForm) // Used for opening the child forms, aka the features
+        private void OpenChildForm(Form childForm) // Used for opening the child forms, aka the features
         {
             if (activeForm != null)
-                activeForm.Close();
+            { activeForm.Close(); }
             activeForm = childForm;
             childForm.TopLevel = false;
             childForm.FormBorderStyle = FormBorderStyle.None;
