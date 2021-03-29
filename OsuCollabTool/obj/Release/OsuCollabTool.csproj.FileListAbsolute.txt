@@ -37,3 +37,5 @@ D:\Coding\OsuCollabTool\OsuCollabTool\OsuCollabTool\obj\Release\OsuCollabTool.ex
 D:\Coding\OsuCollabTool\OsuCollabTool\OsuCollabTool\obj\Release\OsuCollabTool.pdb
 D:\Coding\OsuCollabTool\OsuCollabTool\OsuCollabTool\obj\Release\OsuCollabTool.Main_Classes.MergerFunc.CompareLog.resources
 D:\Coding\OsuCollabTool\OsuCollabTool\OsuCollabTool\obj\Release\OsuCollabTool.Main_Classes.MergerFunc.SeperatorIntf.resources
+D:\Coding\OsuCollabTool\OsuCollabTool\OsuCollabTool\obj\Release\OsuCollabTool.Main_Classes.HitsoundingFunc.HitObjIntf.resources
+D:\Coding\OsuCollabTool\OsuCollabTool\OsuCollabTool\obj\Release\OsuCollabTool.Main_Classes.HitsoundingFunc.VolumeToolIntf.resources
