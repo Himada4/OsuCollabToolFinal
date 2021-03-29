@@ -28,7 +28,8 @@ namespace OsuCollabTool.Main_Classes.HitsoundingFunc
             Common.SetBGCol(theme[2], BG1, BG2);
             Common.SetBtnCol(theme[1], ChangeVol);
             Common.ContrastColor(theme[1], ChangeVol);
-            Common.ContrastColor(theme[2], Option1, Option2, Option3, SetVal, ChangeVal, ChangeValLabel, l1, Selector, ChangesBox, SelectVolBox, SelectTimestampBox, l2, l3, l4, l5, l6, l7, l8, MaxDurStart, MaxDurUntil);
+            Common.ContrastColor(theme[2], Selector, Option1, Option2, Option3, ChangesBox, SetVal, ChangeVal, ChangeValLabel, SelectVolBox, l1, SelectVol, SelectTimestampBox, l3,l4,l5,l8,MaxDurStart,MaxDurUntil, l2, l6, l7);
+            
             dir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}\{ext.GetCurrOsu()}";
             string audioDir = string.Empty;
 

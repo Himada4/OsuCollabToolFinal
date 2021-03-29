@@ -29,6 +29,8 @@ namespace OsuCollabTool.Main_Classes.MappingFunc
 
             Common.SetBGCol(theme[2], MainBG1, MainBG2);
             Common.SetBtnCol(theme[1], ObjSelected, ObjClip, OpenPatternBank, PasteBtn, OpenFolderLoc, SavePattern);
+            Common.ContrastColor(theme[2], l1, l2, l3, l4, l5);
+            Common.ContrastColor(theme[1], ObjSelected, ObjClip, OpenPatternBank, PasteBtn, OpenFolderLoc, SavePattern);
             Directory.CreateDirectory(@"Pattern Bank");
             dir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}{ext.GetCurrOsu()}";
         }

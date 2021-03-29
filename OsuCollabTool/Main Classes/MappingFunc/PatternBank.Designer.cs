@@ -30,22 +30,22 @@
         {
             this.SavePattern = new System.Windows.Forms.Button();
             this.OpenPatternBank = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.l1 = new System.Windows.Forms.GroupBox();
             this.ObjList = new System.Windows.Forms.ListBox();
             this.ObjClip = new System.Windows.Forms.Button();
             this.ObjSelected = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
+            this.l2 = new System.Windows.Forms.Label();
             this.FileName = new System.Windows.Forms.Label();
             this.OffsetTextBox = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.l5 = new System.Windows.Forms.Label();
             this.PasteBtn = new System.Windows.Forms.Button();
             this.OpenFolderLoc = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.l4 = new System.Windows.Forms.Label();
+            this.l3 = new System.Windows.Forms.GroupBox();
             this.MainBG1 = new System.Windows.Forms.TableLayoutPanel();
             this.MainBG2 = new System.Windows.Forms.TableLayoutPanel();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.l1.SuspendLayout();
+            this.l3.SuspendLayout();
             this.MainBG1.SuspendLayout();
             this.MainBG2.SuspendLayout();
             this.SuspendLayout();
@@ -74,20 +74,20 @@
             this.OpenPatternBank.UseVisualStyleBackColor = true;
             this.OpenPatternBank.Click += new System.EventHandler(this.OpenPatternBank_Click);
             // 
-            // groupBox1
+            // l1
             // 
-            this.groupBox1.Controls.Add(this.ObjList);
-            this.groupBox1.Controls.Add(this.ObjClip);
-            this.groupBox1.Controls.Add(this.ObjSelected);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.SavePattern);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(3, 3);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(742, 198);
-            this.groupBox1.TabIndex = 5;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Insert Object To Pattern Bank";
+            this.l1.Controls.Add(this.ObjList);
+            this.l1.Controls.Add(this.ObjClip);
+            this.l1.Controls.Add(this.ObjSelected);
+            this.l1.Controls.Add(this.l2);
+            this.l1.Controls.Add(this.SavePattern);
+            this.l1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.l1.Location = new System.Drawing.Point(3, 3);
+            this.l1.Name = "l1";
+            this.l1.Size = new System.Drawing.Size(742, 198);
+            this.l1.TabIndex = 5;
+            this.l1.TabStop = false;
+            this.l1.Text = "Insert Object To Pattern Bank";
             // 
             // ObjList
             // 
@@ -121,14 +121,14 @@
             this.ObjSelected.UseVisualStyleBackColor = true;
             this.ObjSelected.Click += new System.EventHandler(this.ObjSelected_Click);
             // 
-            // label4
+            // l2
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 24);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(96, 13);
-            this.label4.TabIndex = 12;
-            this.label4.Text = "Detect Objects By:";
+            this.l2.AutoSize = true;
+            this.l2.Location = new System.Drawing.Point(6, 24);
+            this.l2.Name = "l2";
+            this.l2.Size = new System.Drawing.Size(96, 13);
+            this.l2.TabIndex = 12;
+            this.l2.Text = "Detect Objects By:";
             // 
             // FileName
             // 
@@ -145,14 +145,14 @@
             this.OffsetTextBox.Size = new System.Drawing.Size(495, 20);
             this.OffsetTextBox.TabIndex = 7;
             // 
-            // label2
+            // l5
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 156);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(84, 13);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "Offset To Paste:";
+            this.l5.AutoSize = true;
+            this.l5.Location = new System.Drawing.Point(6, 156);
+            this.l5.Name = "l5";
+            this.l5.Size = new System.Drawing.Size(84, 13);
+            this.l5.TabIndex = 8;
+            this.l5.Text = "Offset To Paste:";
             // 
             // PasteBtn
             // 
@@ -179,30 +179,30 @@
             this.OpenFolderLoc.UseVisualStyleBackColor = true;
             this.OpenFolderLoc.Click += new System.EventHandler(this.OpenFolderLoc_Click);
             // 
-            // label3
+            // l4
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 75);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(57, 13);
-            this.label3.TabIndex = 11;
-            this.label3.Text = "File Name:";
+            this.l4.AutoSize = true;
+            this.l4.Location = new System.Drawing.Point(9, 75);
+            this.l4.Name = "l4";
+            this.l4.Size = new System.Drawing.Size(57, 13);
+            this.l4.TabIndex = 11;
+            this.l4.Text = "File Name:";
             // 
-            // groupBox2
+            // l3
             // 
-            this.groupBox2.Controls.Add(this.label3);
-            this.groupBox2.Controls.Add(this.FileName);
-            this.groupBox2.Controls.Add(this.PasteBtn);
-            this.groupBox2.Controls.Add(this.OpenPatternBank);
-            this.groupBox2.Controls.Add(this.OffsetTextBox);
-            this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox2.Location = new System.Drawing.Point(3, 207);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(742, 198);
-            this.groupBox2.TabIndex = 6;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Insert Object To Map";
+            this.l3.Controls.Add(this.l4);
+            this.l3.Controls.Add(this.FileName);
+            this.l3.Controls.Add(this.PasteBtn);
+            this.l3.Controls.Add(this.OpenPatternBank);
+            this.l3.Controls.Add(this.OffsetTextBox);
+            this.l3.Controls.Add(this.l5);
+            this.l3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.l3.Location = new System.Drawing.Point(3, 207);
+            this.l3.Name = "l3";
+            this.l3.Size = new System.Drawing.Size(742, 198);
+            this.l3.TabIndex = 6;
+            this.l3.TabStop = false;
+            this.l3.Text = "Insert Object To Map";
             // 
             // MainBG1
             // 
@@ -223,8 +223,8 @@
             // 
             this.MainBG2.ColumnCount = 1;
             this.MainBG2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.MainBG2.Controls.Add(this.groupBox1, 0, 0);
-            this.MainBG2.Controls.Add(this.groupBox2, 0, 1);
+            this.MainBG2.Controls.Add(this.l1, 0, 0);
+            this.MainBG2.Controls.Add(this.l3, 0, 1);
             this.MainBG2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainBG2.Location = new System.Drawing.Point(0, 0);
             this.MainBG2.Margin = new System.Windows.Forms.Padding(0);
@@ -244,10 +244,10 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "PatternBank";
             this.Text = "SliderBankIntf";
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.l1.ResumeLayout(false);
+            this.l1.PerformLayout();
+            this.l3.ResumeLayout(false);
+            this.l3.PerformLayout();
             this.MainBG1.ResumeLayout(false);
             this.MainBG2.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -257,15 +257,15 @@
         #endregion
         private System.Windows.Forms.Button SavePattern;
         private System.Windows.Forms.Button OpenPatternBank;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox l1;
         private System.Windows.Forms.Label FileName;
         private System.Windows.Forms.TextBox OffsetTextBox;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label l5;
         private System.Windows.Forms.Button PasteBtn;
         private System.Windows.Forms.Button OpenFolderLoc;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label l4;
+        private System.Windows.Forms.GroupBox l3;
+        private System.Windows.Forms.Label l2;
         private System.Windows.Forms.TableLayoutPanel MainBG1;
         private System.Windows.Forms.TableLayoutPanel MainBG2;
         private System.Windows.Forms.ListBox ObjList;
