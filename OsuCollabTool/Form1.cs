@@ -210,6 +210,31 @@ namespace OsuCollabTool
                 hitsounding.Enabled = false;
                 mapping.Enabled = false;
             }
+            else
+            {
+                // Checks if the mapset has a audio
+                string[] files = Directory.GetFiles($@"{songFolder}{currentFolder}");
+                bool hasAudio = false;
+
+                foreach (string file in files)
+                {
+                    if (file.Contains(".mp3") || file.Contains(".ogg") || file.Contains(".wav"))
+                    {
+                        hasAudio = true;
+                    }
+                }
+
+                if (!hasAudio)
+                {
+                    MessageBox.Show("No audio file detected, disabling features that involves audio analysis");
+
+                    hitObjectTool.Enabled = false;
+                    volumeTool.Enabled = false;
+                    seperate.Enabled = false;
+                    bpmDetector.Enabled = false;
+
+                }
+            }
 
             // Shows err dialogue when using the program for the first time
             MainScrMenu.MouseEnter += (s, e) =>
@@ -249,17 +274,24 @@ namespace OsuCollabTool
 
         private void OpenChildForm(Form childForm) // Used for opening the child forms
         {
-            if (activeForm != null)
-            { 
-                activeForm.Close();
+            try
+            {
+                if (activeForm != null)
+                {
+                    activeForm.Close();
+                }
+                activeForm = childForm;
+                childForm.TopLevel = false;
+                childForm.FormBorderStyle = FormBorderStyle.None;
+                childForm.Dock = DockStyle.Fill;
+                MainIntBG.Controls.Add(childForm);
+                MainIntBG.Tag = childForm;
+                childForm.Show();
+            }catch(Exception exc)
+            {
+                MessageBox.Show("There was a problem opening the file, reason: " + exc.Message);
+                RefreshUI();
             }
-            activeForm = childForm;
-            childForm.TopLevel = false;
-            childForm.FormBorderStyle = FormBorderStyle.None;
-            childForm.Dock = DockStyle.Fill;
-            MainIntBG.Controls.Add(childForm);
-            MainIntBG.Tag = childForm;
-            childForm.Show();
         }
 
         #endregion UIRelated Operations
