@@ -34,14 +34,14 @@
             this.FormBorder = new System.Windows.Forms.TableLayoutPanel();
             this.ProjectLabel = new System.Windows.Forms.Label();
             this.CloseApp = new System.Windows.Forms.Button();
-            this.Pref = new System.Windows.Forms.Button();
             this.Mini = new System.Windows.Forms.Button();
+            this.Pref = new System.Windows.Forms.Button();
+            this.Backup = new System.Windows.Forms.Button();
             this.MainIntPanel = new System.Windows.Forms.Panel();
             this.MainIntBG = new System.Windows.Forms.Panel();
             this.MainScrMenu = new System.Windows.Forms.MenuStrip();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.Backup = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.FormBorder.SuspendLayout();
             this.MainIntPanel.SuspendLayout();
@@ -120,6 +120,21 @@
             this.CloseApp.MouseEnter += new System.EventHandler(this.CloseApp_MouseEnter);
             this.CloseApp.MouseLeave += new System.EventHandler(this.CloseApp_MouseLeave);
             // 
+            // Mini
+            // 
+            this.Mini.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Mini.FlatAppearance.BorderSize = 0;
+            this.Mini.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Mini.Image = ((System.Drawing.Image)(resources.GetObject("Mini.Image")));
+            this.Mini.Location = new System.Drawing.Point(568, 0);
+            this.Mini.Margin = new System.Windows.Forms.Padding(0);
+            this.Mini.Name = "Mini";
+            this.Mini.Size = new System.Drawing.Size(88, 23);
+            this.Mini.TabIndex = 3;
+            this.toolTip1.SetToolTip(this.Mini, "Minimise");
+            this.Mini.UseVisualStyleBackColor = true;
+            this.Mini.Click += new System.EventHandler(this.Mini_Click);
+            // 
             // Pref
             // 
             this.Pref.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -135,20 +150,21 @@
             this.Pref.UseVisualStyleBackColor = true;
             this.Pref.Click += new System.EventHandler(this.Pref_Click);
             // 
-            // Mini
+            // Backup
             // 
-            this.Mini.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Mini.FlatAppearance.BorderSize = 0;
-            this.Mini.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Mini.Image = ((System.Drawing.Image)(resources.GetObject("Mini.Image")));
-            this.Mini.Location = new System.Drawing.Point(568, 0);
-            this.Mini.Margin = new System.Windows.Forms.Padding(0);
-            this.Mini.Name = "Mini";
-            this.Mini.Size = new System.Drawing.Size(88, 23);
-            this.Mini.TabIndex = 3;
-            this.toolTip1.SetToolTip(this.Mini, "Minimise");
-            this.Mini.UseVisualStyleBackColor = true;
-            this.Mini.Click += new System.EventHandler(this.Mini_Click);
+            this.Backup.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.Backup.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Backup.FlatAppearance.BorderSize = 0;
+            this.Backup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Backup.Image = ((System.Drawing.Image)(resources.GetObject("Backup.Image")));
+            this.Backup.Location = new System.Drawing.Point(392, 0);
+            this.Backup.Margin = new System.Windows.Forms.Padding(0);
+            this.Backup.Name = "Backup";
+            this.Backup.Size = new System.Drawing.Size(88, 23);
+            this.Backup.TabIndex = 4;
+            this.toolTip1.SetToolTip(this.Backup, "Backup Mapset...");
+            this.Backup.UseVisualStyleBackColor = false;
+            this.Backup.Click += new System.EventHandler(this.Backup_Click);
             // 
             // MainIntPanel
             // 
@@ -184,22 +200,6 @@
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
-            // Backup
-            // 
-            this.Backup.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.Backup.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Backup.FlatAppearance.BorderSize = 0;
-            this.Backup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Backup.Image = ((System.Drawing.Image)(resources.GetObject("Backup.Image")));
-            this.Backup.Location = new System.Drawing.Point(392, 0);
-            this.Backup.Margin = new System.Windows.Forms.Padding(0);
-            this.Backup.Name = "Backup";
-            this.Backup.Size = new System.Drawing.Size(88, 23);
-            this.Backup.TabIndex = 4;
-            this.toolTip1.SetToolTip(this.Backup, "Backup Mapset...");
-            this.Backup.UseVisualStyleBackColor = false;
-            this.Backup.Click += new System.EventHandler(this.Backup_Click);
-            // 
             // MainInterface
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -207,6 +207,7 @@
             this.ClientSize = new System.Drawing.Size(748, 521);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.MainScrMenu;
             this.Name = "MainInterface";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

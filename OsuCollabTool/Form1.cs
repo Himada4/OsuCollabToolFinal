@@ -113,12 +113,12 @@ namespace OsuCollabTool
 
             // Gets map directory and UI information
             UIDataExtractor ext = new UIDataExtractor();
-            ext.refresh();
-            songFolder = ext.getSongFol();
-            theme = ext.getTheme();
-            buttonOrder = ext.getButOrd();
-            currentFolder = ext.getCurrFol();
-            currentOsu = ext.getCurrOsu();
+            ext.Refresh();
+            songFolder = ext.GetSongFol();
+            theme = ext.GetTheme();
+            buttonOrder = ext.GetButOrd();
+            currentFolder = ext.GetCurrFol();
+            currentOsu = ext.GetCurrOsu();
 
             // Border of the Form
             FormBorder.BackColor = theme[0];
@@ -147,7 +147,7 @@ namespace OsuCollabTool
             bpmDetector.Text = "BPM Detector";
             bpmDetector.Click += (s, e) => { BPMDetectorIntf childForm = new BPMDetectorIntf(); OpenChildForm(childForm); };
             songSetup.DropDownItems.Add(bpmDetector);
-            // -----
+            //// -----
 
             // Merger https://stackoverflow.com/questions/6187944/how-can-i-create-a-dynamic-button-click-event-on-a-dynamic-button
             ToolStripMenuItem merger = new ToolStripMenuItem();
@@ -170,7 +170,7 @@ namespace OsuCollabTool
             seperate.Text = "Seperate";
             seperate.Click += (s, e) => { SeperatorIntf childForm = new SeperatorIntf(); OpenChildForm(childForm); };
             merger.DropDownItems.Add(seperate);
-            // -----
+            ////-----
 
             // Hitsounding
             ToolStripMenuItem hitsounding = new ToolStripMenuItem();
@@ -187,7 +187,7 @@ namespace OsuCollabTool
             hitObjectTool.Text = "HitObject Tool";
             hitObjectTool.Click += (s, e) => { HitObjIntf childForm = new HitObjIntf(); OpenChildForm(childForm); };
             hitsounding.DropDownItems.Add(hitObjectTool);
-            // -----
+            //// -----
 
             // Mapping
             ToolStripMenuItem mapping = new ToolStripMenuItem();
@@ -198,7 +198,7 @@ namespace OsuCollabTool
             sliderBank.Text = "Pattern Bank";
             sliderBank.Click += (s, e) => { PatternBank childForm = new PatternBank(); OpenChildForm(childForm); };
             mapping.DropDownItems.Add(sliderBank);
-            // -----
+            //// -----
 
             // Disables the toolstripmenu if the directories are null
             if (string.IsNullOrEmpty(songFolder) ||
@@ -250,7 +250,9 @@ namespace OsuCollabTool
         private void OpenChildForm(Form childForm) // Used for opening the child forms
         {
             if (activeForm != null)
-            { activeForm.Close(); }
+            { 
+                activeForm.Close();
+            }
             activeForm = childForm;
             childForm.TopLevel = false;
             childForm.FormBorderStyle = FormBorderStyle.None;
