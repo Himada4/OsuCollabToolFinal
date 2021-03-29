@@ -1,49 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Editor_Reader;
+﻿using Editor_Reader;
+using OsuCollabTool.CoreClasses;
 using OsuCollabTool.UI;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Reflection;
-using OsuCollabTool.CoreClasses;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace OsuCollabTool.Main_Classes.MappingFunc
 {
     public partial class PatternBank : Form
     {
-        string[] SavedObj;
-        int insertVal = 0;
+        private string[] savedObj;
+        private int insertVal = 0;
+        private string dir = string.Empty;
+
         public PatternBank()
         {
             InitializeComponent();
 
             UIDataExtractor ext = new UIDataExtractor();
 
-            //theme
-            Color[] theme = ext.getTheme();
+            // Theme
+            Color[] theme = ext.GetTheme();
 
-            Common.setBGCol(theme[2],MainBG1,MainBG2);
-            Common.setBtnCol(theme[1],ObjSelected,ObjClip,OpenPatternBank,PasteBtn,OpenFolderLoc,SavePattern);
+            Common.SetBGCol(theme[2], MainBG1, MainBG2);
+            Common.SetBtnCol(theme[1], ObjSelected, ObjClip, OpenPatternBank, PasteBtn, OpenFolderLoc, SavePattern);
             Directory.CreateDirectory(@"Pattern Bank");
-
-
+            dir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}{ext.GetCurrOsu()}";
         }
 
-        
+        // Saves Pattern to Pattern Bank
         private void SavePattern_Click(object sender, EventArgs e)
         {
-            
-            List<string> SavedPattern = new List<string>();
+            List<string> savedPattern = new List<string>();
 
             foreach (var stringObj in ObjList.Items)
             {
-                SavedPattern.Add(stringObj.ToString());
+                savedPattern.Add(stringObj.ToString());
             }
 
             using (var sfd = new SaveFileDialog())
@@ -54,13 +51,12 @@ namespace OsuCollabTool.Main_Classes.MappingFunc
 
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    File.WriteAllLines(sfd.FileName, SavedPattern);
-
+                    File.WriteAllLines(sfd.FileName, savedPattern);
                 }
             }
-
         }
 
+        // Gets the selected objects within the Osu! editor
         private void ObjSelected_Click(object sender, EventArgs e)
         {
             ObjList.Items.Clear();
@@ -68,35 +64,33 @@ namespace OsuCollabTool.Main_Classes.MappingFunc
             editor.FetchHOM();
             editor.FetchSelected();
 
-            
-            var SelectedObj = editor.selectedObjects;
+            var selectedObj = editor.selectedObjects;
 
-            foreach (var obj in SelectedObj)
+            foreach (var obj in selectedObj)
             {
                 ObjList.Items.Add(obj);
             }
         }
 
+        // Gets the copied objects within the Osu! editor
         private void ObjClip_Click(object sender, EventArgs e)
         {
             ObjList.Items.Clear();
             EditorReader editor = new EditorReader();
             editor.FetchHOM();
             editor.FetchClipboard();
-            
 
-            var ClippedObj = editor.clipboardObjects;
+            var clippedObj = editor.clipboardObjects;
 
-            foreach (var obj in ClippedObj)
+            foreach (var obj in clippedObj)
             {
                 ObjList.Items.Add(obj);
-            } 
-            
+            }
         }
 
+        // Opends the Pattern bank for the user to choose which to paste
         private void OpenPatternBank_Click(object sender, EventArgs e)
         {
-            
             using (var ofd = new OpenFileDialog())
             {
                 ofd.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
@@ -105,120 +99,154 @@ namespace OsuCollabTool.Main_Classes.MappingFunc
 
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    SavedObj = File.ReadAllLines(ofd.FileName);
+                    savedObj = File.ReadAllLines(ofd.FileName);
                     FileName.Text = ofd.FileName;
                 }
             }
-
         }
 
-        private void PasteBtn_Click(object sender, EventArgs e)
+        // Triggers process to paste the pattern, but first checks for errors
+        private async void PasteBtn_Click(object sender, EventArgs e)
         {
-            string offsetText = OffsetTextBox.Text;
+            PasteBtn.Text = "Processing...";
 
-            int offset = 0;
+            Exception exc = await Task.Run(StartPaste);
 
-            if (offsetText.Contains(":"))
+            if (exc == null)
             {
-                string[] arrOffset = offsetText.Split(':');
+                PasteBtn.Text = "Complete!";
 
-                int decimalNum = Convert.ToInt32(arrOffset[2]);
+                MessageBox.Show("Pattern has been pasted successfully!");
 
-                int secondsNum = Convert.ToInt32(arrOffset[1])*1000;
-
-                int minutesNum = (Convert.ToInt32(arrOffset[0]))*60*1000;
-
-                offset = decimalNum + secondsNum + minutesNum;
+                PasteBtn.Text = "Make Changes!";
             }
             else
             {
-                offset = Convert.ToInt32(OffsetTextBox.Text);
+                PasteBtn.Text = "Error";
+                MessageBox.Show(exc.Message);
+                PasteBtn.Text = "Make Changes!";
             }
+        }
 
-            if(SavedObj == null)
+        // Actual process for pasting the pattern
+        private Exception StartPaste()
+        {
+            try
             {
-                MessageBox.Show("Please select a pattern file!");
+                Exception exc = null;
+
+                string offsetText = OffsetTextBox.Text;
+
+                int offset = 0;
+
+                if (offsetText.Contains(":"))
+                {
+                    string[] arrOffset = offsetText.Split(':');
+
+                    int decimalNum = Convert.ToInt32(arrOffset[2]);
+
+                    int secondsNum = Convert.ToInt32(arrOffset[1]) * 1000;
+
+                    int minutesNum = Convert.ToInt32(arrOffset[0]) * 60 * 1000;
+
+                    offset = decimalNum + secondsNum + minutesNum;
+                }
+                else
+                {
+                    offset = Convert.ToInt32(OffsetTextBox.Text);
+                }
+
+                if (savedObj == null)
+                {
+                    throw ExceptionsHandling.patternFileNotSelected;
+                }
+                else
+                {
+                    int[] diff = new int[savedObj.Length];
+
+                    diff[0] = offset;
+
+                    int[] originalOffset = new int[savedObj.Length];
+
+                    for (int i = 0; i < savedObj.Length; i = i + 1)
+                    {
+                        originalOffset[i] = Convert.ToInt32(savedObj[i].Split(',')[2]);
+                    }
+
+                    if (diff.Length > 1)
+                    {
+                        for (int i = 1; i < savedObj.Length; i = i + 1)
+                        {
+                            diff[i] = originalOffset[i] - originalOffset[0];
+                        }
+                    }
+
+                    string[] result = new string[savedObj.Length];
+
+                    for (int i = 0; i < savedObj.Length; i = i + 1)
+                    {
+                        string[] splitArr = savedObj[i].Split(',');
+                        if (i == 0)
+                        {
+                            splitArr[2] = $"{diff[0]}";
+                        }
+                        else
+                        {
+                            splitArr[2] = $"{diff[0] + diff[i]}";
+                        }
+
+                        result[i] = string.Join(",", splitArr);
+                    }
+
+                    insertVal = diff[0];
+
+                    UIDataExtractor ext = new UIDataExtractor();
+
+                    MapDataExtractor map = new MapDataExtractor(dir);
+
+                    List<string> hitObj = map.GetHitObjString();
+
+                    List<string> newHitObj = new List<string>();
+
+                    newHitObj.Add("[HitObjects]");
+
+                    int noRepeat = 0;
+                    hitObj.RemoveAt(0);
+                    hitObj.RemoveAt(hitObj.Count - 1);
+
+                    for (int i = 0; i < hitObj.Count; i = i + 1)
+                    {
+                        string[] arr = hitObj[i].Split(',');
+
+                        if (Convert.ToInt32(arr[2]) > insertVal && noRepeat == 0)
+                        {
+                            newHitObj.AddRange(result);
+                            noRepeat = noRepeat + 1;
+                            newHitObj.Add(hitObj[i]);
+                        }
+                        else
+                        {
+                            newHitObj.Add(hitObj[i]);
+                        }
+                    }
+
+                    //newHitObj.Add(string.Empty);
+
+                    Common.ReplaceFileWithNewData(dir, 8, newHitObj);
+
+                    return exc;
+                }
             }
-            else
+            catch (Exception exc)
             {
-                int[] diff = new int[SavedObj.Length];
-
-                diff[0] = offset;
-
-                int[] originalOffset = new int[SavedObj.Length];
-
-                for (int i = 0; i < SavedObj.Length; i = i + 1)
-                {
-                    originalOffset[i] = Convert.ToInt32(SavedObj[i].Split(',')[2]);
-                }
-
-                if (diff.Length > 1)
-                {
-                    for (int i = 1; i < SavedObj.Length; i = i + 1)
-                    {
-                        diff[i] = originalOffset[i] - originalOffset[0];
-                    }
-                }
-
-                string[] result = new string[SavedObj.Length];
-
-                for (int i = 0; i < SavedObj.Length; i = i + 1)
-                {
-                    string[] splitArr = SavedObj[i].Split(',');
-                    if (i == 0)
-                    {
-                        splitArr[2] = $"{diff[0]}";
-                    }
-                    else 
-                    {
-                        splitArr[2] = $"{diff[0] + diff[i]}"; 
-                    }
-
-                    result[i] = String.Join(",", splitArr);
-                }
-
-                insertVal = diff[0];
-
-                UIDataExtractor ext = new UIDataExtractor();
-
-                string Dir = $@"{ext.getSongFol()}{ext.getCurrFol()}{ext.getCurrOsu()}";
-
-                MapDataExtractor map = new MapDataExtractor(Dir);
-
-                List<string> HitObj = map.GetHitObjString();
-
-                List<string> newHitObj = new List<string>();
-
-                newHitObj.Add("[HitObjects]");
-
-                int noRepeat = 0;
-                HitObj.RemoveAt(0);
-                HitObj.RemoveAt(HitObj.Count - 1);
-
-                for (int i = 0; i < HitObj.Count; i = i + 1)
-                {
-
-                    string[] arr = HitObj[i].Split(',');
-
-                    if(Convert.ToInt32(arr[2]) > insertVal && noRepeat == 0)
-                    {
-                        newHitObj.AddRange(result);
-                        noRepeat = noRepeat + 1;
-                        newHitObj.Add(HitObj[i]);
-                    }
-                    else
-                    {
-                        newHitObj.Add(HitObj[i]);
-                    }
-                }
-
-                newHitObj.Add("");
-
-                Common.ReplaceFileWithNewData(Dir, 8, newHitObj);
-                MessageBox.Show("Completed");
+                return exc;
             }
+        }
 
-            
+        // Opens the folder location of the Pattern Bank if needed
+        private void OpenFolderLoc_Click(object sender, EventArgs e)
+        {
+            Process.Start("explorer.exe", $@"{Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)}\Pattern Bank");
         }
     }
 }

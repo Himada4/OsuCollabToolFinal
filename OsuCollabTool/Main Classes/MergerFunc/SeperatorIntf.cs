@@ -12,32 +12,30 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
 {
     public partial class SeperatorIntf : Form
     {
-        
         private int totalTime = 0;
-        private string dir = "";
+        private string dir = string.Empty;
 
         public SeperatorIntf()
         {
             InitializeComponent();
 
             UIDataExtractor ext = new UIDataExtractor();
-            string[] files = Directory.GetFiles($@"{ext.getSongFol()}{ext.getCurrFol()}");
+            string[] files = Directory.GetFiles($@"{ext.GetSongFol()}{ext.GetCurrFol()}");
 
-            //theme
-            Color[] Theme = ext.getTheme();
-            Common.setBGCol(Theme[2], BtmBG, MainBG);
-            Common.setBtnCol(Theme[1], SeperateBtn);
-            Common.ContrastColor(Theme[1], SeperateBtn);
-            Common.ContrastColor(Theme[2], l1, l2, l3, l4, l5, l6, l7, MaxDurStart, MaxDurUntil);
-            dir = $@"{ext.getSongFol()}{ext.getCurrFol()}\{ext.getCurrOsu()}";
-            string audioDir = "";
-
+            // Theme
+            Color[] theme = ext.GetTheme();
+            Common.SetBGCol(theme[2], BtmBG, MainBG);
+            Common.SetBtnCol(theme[1], SeperateBtn);
+            Common.ContrastColor(theme[1], SeperateBtn);
+            Common.ContrastColor(theme[2], l1, l2, l3, l4, l5, l6, l7, MaxDurStart, MaxDurUntil);
+            dir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}\{ext.GetCurrOsu()}";
+            string audioDir = string.Empty;
 
             foreach (string file in files)
             {
                 if (file.Contains(".mp3"))
                 {
-                    audioDir = $@"{ext.getSongFol()}{ext.getCurrFol()}\{Path.GetFileName(file)}";
+                    audioDir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}\{Path.GetFileName(file)}";
                 }
             }
 
@@ -49,7 +47,7 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
             int minMili = minutes * 1000 * 60;
             int seconds = (totalTime - minMili) / 1000;
             int secMili = seconds * 1000;
-            int miliseconds = (totalTime - minMili - secMili);
+            int miliseconds = totalTime - minMili - secMili;
 
             MaxDurStart.Text = $"{minutes}:{seconds}:{miliseconds}";
             MaxDurUntil.Text = $"{minutes}:{seconds}:{miliseconds}";
@@ -59,28 +57,25 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
 
             StartTrackBar.Scroll += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, StartTrackBar));
             UntilTrackBar.Scroll += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, UntilTrackBar));
-
-            //StartTrackBar.MouseEnter += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, StartTrackBar));
-            //UntilTrackBar.MouseEnter += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, UntilTrackBar));
         }
 
+        // Tracks the track bar
         private void TrackBar_TrackVal(object sender, EventArgs e, TrackBar track)
         {
-            int[] currVal = getCurrTime(track.Value);
+            int[] currVal = GetCurrTime(track.Value);
             trackNum.SetToolTip(track, $"{currVal[0]}:{currVal[1]}:{currVal[2]}");
             if (track == StartTrackBar)
             {
-                SeperateFromTb.Text = (track.Value).ToString();
+                SeperateFromTb.Text = track.Value.ToString();
             }
             else if (track == UntilTrackBar)
             {
-                UntilTb.Text = (track.Value).ToString();
+                UntilTb.Text = track.Value.ToString();
             }
-
-            //SMTextBox.Text = trackNum.GetToolTip(track);
         }
 
-        private int[] getCurrTime(int currMiliseconds)
+        // Gets the current time in formatted form from miliseconds
+        private int[] GetCurrTime(int currMiliseconds)
         {
             int[] arr = new int[3];
 
@@ -93,9 +88,10 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
             return arr;
         }
 
+        // Triggers a process to check for errors before executing the actual process
         private async void SeperateBtn_Click(object sender, EventArgs e)
         {
-            if (SeperateFromTb.Text == "" || UntilTb.Text == "")
+            if (SeperateFromTb.Text == string.Empty || UntilTb.Text == string.Empty)
             {
                 MessageBox.Show(ExceptionsHandling.invalidInput.Message);
             }
@@ -124,6 +120,7 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
             }
         }
 
+        // The actual process
         private Exception StartSeperation()
         {
             Exception exc = null;
@@ -196,7 +193,7 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
                 template.Add(lines);
             }
 
-            while (line != "")
+            while (line != string.Empty)
             {
                 line = sr.ReadLine();
             }
@@ -214,52 +211,54 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
                 template.Add(lines);
             }
 
-            //close the file
+            // close the file
             sr.Close();
-
 
             string templateOsuName = $"{Path.GetFileName(dir)}";
             string[] splitTemp = templateOsuName.Split('[');
 
-            string FileName = $"{splitTemp[0]}[Seperated File]";
-            string BaseFileName = $"{FileName}";
+            string fileName = $"{splitTemp[0]}[Seperated File]";
+            string baseFileName = $"{fileName}";
             int i = 1;
 
-            while (File.Exists($"{Path.GetDirectoryName(dir)}/{FileName}.osu")) // https://stackoverflow.com/questions/5270919/always-create-new-file-if-file-already-exists-with-same-location-in-c-sharp
+            while (File.Exists($"{Path.GetDirectoryName(dir)}/{fileName}.osu")) // https://stackoverflow.com/questions/5270919/always-create-new-file-if-file-already-exists-with-same-location-in-c-sharp
             {
                 i = i + 1;
-                FileName = $"{BaseFileName}({i})";
+                fileName = $"{baseFileName}({i})";
             }
 
-            TextWriter writer = new StreamWriter($@"{Path.GetDirectoryName(dir)}/{FileName}.osu", true);
+            TextWriter writer = new StreamWriter($@"{Path.GetDirectoryName(dir)}/{fileName}.osu", true);
 
             foreach (var lines in template)
             {
                 writer.WriteLine(lines);
             }
+
             writer.Close();
 
             return exc;
         }
 
-        private Queue<string> GetUP(List<string> TimingPoints)
+        // Gets the uninherited points in Queue
+        private Queue<string> GetUP(List<string> timingPoints)
         {
-            Queue<string> UninheritedPoints = new Queue<string>();
+            Queue<string> uninheritedPoints = new Queue<string>();
 
-            for (int i = 0; i < TimingPoints.Count; i = i + 1)
+            for (int i = 0; i < timingPoints.Count; i = i + 1)
             {
-                string[] split = TimingPoints[i].Split(',');
+                string[] split = timingPoints[i].Split(',');
 
                 if (!split[1].Contains("-"))
                 {
-                    UninheritedPoints.Enqueue(TimingPoints[i]);
+                    uninheritedPoints.Enqueue(timingPoints[i]);
                 }
             }
 
-            return UninheritedPoints;
+            return uninheritedPoints;
         }
 
-        private int convertToFormattedOffset(string input)
+        // Converts formatted offset to miliseconds if needed
+        private int ConvertToFormattedOffset(string input)
         {
             string offsetText = input;
 
@@ -273,7 +272,7 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
 
                 int secondsNum = Convert.ToInt32(arrOffset[1]) * 1000;
 
-                int minutesNum = (Convert.ToInt32(arrOffset[0])) * 60 * 1000;
+                int minutesNum = Convert.ToInt32(arrOffset[0]) * 60 * 1000;
 
                 offset = decimalNum + secondsNum + minutesNum;
             }
@@ -285,19 +284,20 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
             return offset;
         }
 
+        // Checks the textbox input
         private void ContentChanged(object sender, EventArgs e)
         {
             try
             {
                 if ((sender as TextBox).Name == "SeperateFromTb")
                 {
-                    SeperateFromTb.Text = (convertToFormattedOffset(SeperateFromTb.Text)).ToString();
+                    SeperateFromTb.Text = ConvertToFormattedOffset(SeperateFromTb.Text).ToString();
 
                     StartTrackBar.Value = Convert.ToInt32(SeperateFromTb.Text);
                 }
                 else if ((sender as TextBox).Name == "UntilTb")
                 {
-                    SeperateFromTb.Text = (convertToFormattedOffset(SeperateFromTb.Text)).ToString();
+                    SeperateFromTb.Text = (ConvertToFormattedOffset(SeperateFromTb.Text)).ToString();
 
                     UntilTrackBar.Value = Convert.ToInt32(UntilTb.Text);
                 }

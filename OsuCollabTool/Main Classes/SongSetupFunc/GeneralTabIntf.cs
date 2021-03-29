@@ -9,23 +9,23 @@ namespace OsuCollabTool.Main_Classes.SongSetupFunc
 {
     public partial class GeneralTabIntf : Form
     {
-        private string Dir = "";
-        private string[] GeneralVar;
+        private string dir = string.Empty;
+        private string[] generalVar;
 
         public GeneralTabIntf()
         {
             InitializeComponent();
 
-            GeneralVar = new string[] { "AudioFilename", "AudioLeadIn", "PreviewTime", "Countdown", "SampleSet", "StackLeniency", "Mode", "LetterboxInBreaks", "UseSkinSprites", "OverlayPosition", "SkinPreference", "EpilepsyWarning", "CountdownOffset", "SpecialStyle", "WidescreenStoryboard", "SamplesMatchPlaybackRate" };
+            generalVar = new string[] { "AudioFilename", "AudioLeadIn", "PreviewTime", "Countdown", "SampleSet", "StackLeniency", "Mode", "LetterboxInBreaks", "UseSkinSprites", "OverlayPosition", "SkinPreference", "EpilepsyWarning", "CountdownOffset", "SpecialStyle", "WidescreenStoryboard", "SamplesMatchPlaybackRate" };
 
             UIDataExtractor ext = new UIDataExtractor();
-            Color[] Theme = ext.getTheme();
+            Color[] theme = ext.GetTheme();
 
             //Interface Theme Set
-            Common.setBGCol(Theme[2], MainBG, SubBG);
-            Common.setBtnCol(Theme[1], SaveChangesBtn);
-            Common.ContrastColor(Theme[1], SaveChangesBtn);
-            Common.ContrastColor(Theme[2], StringInptGroupBox, IntInptGroupBox, BoolInptGroupBox, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, LinkToOsuFileFormat);
+            Common.SetBGCol(theme[2], MainBG, SubBG);
+            Common.SetBtnCol(theme[1], SaveChangesBtn);
+            Common.ContrastColor(theme[1], SaveChangesBtn);
+            Common.ContrastColor(theme[2], StringInptGroupBox, IntInptGroupBox, BoolInptGroupBox, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, LinkToOsuFileFormat);
 
             Queue<Control> tB = new Queue<Control>();
             tB.Enqueue(AFTextbox);
@@ -46,24 +46,24 @@ namespace OsuCollabTool.Main_Classes.SongSetupFunc
             tB.Enqueue(SMPRPanel);
 
             //fill in blanks
-            Dir = $@"{ext.getSongFol()}{ext.getCurrFol()}{ext.getCurrOsu()}";
+            dir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}{ext.GetCurrOsu()}";
 
-            MapDataExtractor mapData = new MapDataExtractor(Dir);
+            MapDataExtractor mapData = new MapDataExtractor(dir);
 
             string[,] mapArr = mapData.GetGeneral();
-            List<int> ExistingVal = new List<int>();
+            List<int> existingVal = new List<int>();
 
-            for (int j = 0; j < GeneralVar.Length; j = j + 1)
+            for (int j = 0; j < generalVar.Length; j = j + 1)
             {
                 Control control = tB.Dequeue();
                 for (int i = 0; i <= mapArr.GetUpperBound(1); i = i + 1)
                 {
-                    if (mapArr[0, i] == GeneralVar[j])
+                    if (mapArr[0, i] == generalVar[j])
                     {
                         if (control is TextBox)
                         {
                             string TextToInput = mapArr[1, i];
-                            control.Text = TextToInput.Replace(" ", "");
+                            control.Text = TextToInput.Replace(" ", string.Empty);
                         }
                         else
                         {
@@ -92,18 +92,20 @@ namespace OsuCollabTool.Main_Classes.SongSetupFunc
                                 }
                             }
                         }
-                        ExistingVal.Add(j);
+                        existingVal.Add(j);
                         break;
                     }
                 }
             }
         }
 
+        // Gives user the link to know the defenitions of the parameters
         private void LinkToOsuFileFormat_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://osu.ppy.sh/wiki/fi/osu!_File_Formats/Osu_(file_format)");
         }
 
+        // Saves changes, overwrites it on the .osu file
         private void SaveChangesBtn_Click(object sender, EventArgs e)
         {
             Queue<Control> tB = new Queue<Control>();
@@ -129,7 +131,7 @@ namespace OsuCollabTool.Main_Classes.SongSetupFunc
             int length = tB.Count;
 
             newInput.Add("osu file format v14");
-            newInput.Add("");
+            newInput.Add(string.Empty);
             newInput.Add("[General]");
 
             for (int i = 0; i < length; i = i + 1)
@@ -137,12 +139,12 @@ namespace OsuCollabTool.Main_Classes.SongSetupFunc
                 Control control = tB.Dequeue();
                 if (control is TextBox)
                 {
-                    if (control.Text == "")
+                    if (control.Text == string.Empty)
                     {
                     }
                     else
                     {
-                        newInput.Add($"{GeneralVar[i]}:{control.Text}"); 
+                        newInput.Add($"{generalVar[i]}:{control.Text}");
                     }
                 }
                 else
@@ -153,12 +155,12 @@ namespace OsuCollabTool.Main_Classes.SongSetupFunc
                         {
                             if ((radio as RadioButton).Checked == true && (string)(radio as RadioButton).Tag == "0")
                             {
-                                newInput.Add($"{GeneralVar[i]}:0");
+                                newInput.Add($"{generalVar[i]}:0");
                                 break;
                             }
                             else if ((radio as RadioButton).Checked == true && (string)(radio as RadioButton).Tag == "1")
                             {
-                                newInput.Add($"{GeneralVar[i]}:1");
+                                newInput.Add($"{generalVar[i]}:1");
                                 break;
                             }
                         }
@@ -166,9 +168,9 @@ namespace OsuCollabTool.Main_Classes.SongSetupFunc
                 }
             }
 
-            newInput.Add("");
+            newInput.Add(string.Empty);
 
-            Common.ReplaceFileWithNewData(Dir, 1, newInput);
+            Common.ReplaceFileWithNewData(dir, 1, newInput);
         }
     }
 }

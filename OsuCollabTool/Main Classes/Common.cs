@@ -12,7 +12,7 @@ namespace OsuCollabTool.Main_Classes
 {
     class Common
     {
-        public static void setBtnCol(Color color, params Button[] buttons)
+        public static void SetBtnCol(Color color, params Button[] buttons)
         {
             foreach (var button in buttons)
             {
@@ -20,7 +20,7 @@ namespace OsuCollabTool.Main_Classes
             }
         }
 
-        public static void setBGCol(Color color, params Control[] BG)
+        public static void SetBGCol(Color color, params Control[] BG)
         {
             foreach (var bg in BG)
             {
@@ -44,20 +44,6 @@ namespace OsuCollabTool.Main_Classes
             {
                 control.ForeColor = Color.FromArgb(d, d, d);
             } 
-        }
-
-        
-        public void openChildForm(Form childForm, Control parentContainer, Form activeForm)
-        {
-            if (activeForm != null)
-                activeForm.Close();
-            activeForm = childForm;
-            childForm.TopLevel = false;
-            childForm.FormBorderStyle = FormBorderStyle.None;
-            childForm.Dock = DockStyle.Fill;
-            parentContainer.Controls.Add(childForm);
-            parentContainer.Tag = childForm;
-            childForm.Show();
         }
 
         public static Form ReloadChildform(Form childForm, Form newChildForm, Control parentContainer)

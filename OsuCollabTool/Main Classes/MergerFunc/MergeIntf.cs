@@ -1,23 +1,19 @@
-﻿using System;
+﻿using OsuCollabTool.CoreClasses;
+using OsuCollabTool.UI;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using OsuCollabTool.UI;
-using OsuCollabTool.CoreClasses;
-using Editor_Reader;
 
 namespace OsuCollabTool.Main_Classes.MergerFunc
 {
     public partial class MergeIntf : Form
     {
-        string Dir = "";
-        bool directlyDropped = false;
+        private string dir = string.Empty;
+        private bool directlyDropped = false;
+
         public MergeIntf()
         {
             InitializeComponent();
@@ -25,13 +21,13 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
             FromFolder.Items.Clear();
 
             UIDataExtractor ext = new UIDataExtractor();
-            Color[] theme = ext.getTheme();
-            Common.setBtnCol(theme[1], MergeButton);
-            Common.setBGCol(theme[2], t1, t2, t3, t4);
+            Color[] theme = ext.GetTheme();
+            Common.SetBtnCol(theme[1], MergeButton);
+            Common.SetBGCol(theme[2], t1, t2, t3, t4);
             Common.ContrastColor(theme[1], MergeButton);
             Common.ContrastColor(theme[2], l1, l2);
-            string[] files = Directory.GetFiles($@"{ext.getSongFol()}{ext.getCurrFol()}");
-            Dir = $@"{ext.getSongFol()}{ext.getCurrFol()}";
+            string[] files = Directory.GetFiles($@"{ext.GetSongFol()}{ext.GetCurrFol()}");
+            dir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}";
 
             foreach (string file in files)
             {
@@ -40,14 +36,16 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
                     FromFolder.Items.Add(Path.GetFileName(file));
                 }
             }
-
-            
         }
 
+        // This region is used for selecting items via drag drop
+        #region Drag Drop
         private void FromFolder_MouseDown(object sender, MouseEventArgs e)
         {
             try
-            { FromFolder.DoDragDrop(FromFolder.SelectedItem.ToString(), DragDropEffects.Copy); }
+            {
+                FromFolder.DoDragDrop(FromFolder.SelectedItem.ToString(), DragDropEffects.Copy);
+            }
             catch { }
         }
 
@@ -92,13 +90,15 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
                 }
             }
         }
+        #endregion
 
+        // Trigger before the proccess starts, invokes a thread
         private async void MergeButton_Click(object sender, EventArgs e)
         {
-            MergeButton.Text = "Processing..."; 
+            MergeButton.Text = "Processing...";
             Exception exc = await Task.Run(CheckBeforeMerge);
 
-            if(exc == null)
+            if (exc == null)
             {
                 MergeButton.Text = "Complete!";
                 MessageBox.Show("Merging has been completed successfully!");
@@ -111,104 +111,114 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
                 MessageBox.Show(exc.Message);
                 MergeButton.Text = "Merge!";
             }
-
         }
 
+        // Checks for errors before triggering the actual process
         private Exception CheckBeforeMerge()
         {
-            Exception exc = null;
-
-            List<string> fileDirs = new List<string>();
-
-            // Get the file Dirs
-            foreach (var file in ToMerge.Items)
+            try
             {
-                fileDirs.Add($@"{Dir}\{file}");
-            }
+                Exception exc = null;
+                int noFiles = 0;
+                List<string> fileDirs = new List<string>();
 
-            
-
-            List<List<string>> allTimingPoints = new List<List<string>>();
-            List<List<string>> allHitObjects = new List<List<string>>();
-            
-
-            foreach(var fileDir in fileDirs)
-            {
-                MapDataExtractor map = new MapDataExtractor(fileDir);
-
-                List<string> tempTiming = map.GetTimingPString();
-                tempTiming.RemoveAt(0);
-                tempTiming.RemoveAt(tempTiming.Count - 1);
-                tempTiming.RemoveAt(tempTiming.Count - 1);
-                allTimingPoints.Add(tempTiming);
-
-                List<string> tempHit = map.GetHitObjString();
-                tempHit.RemoveAt(0);
-                tempHit.RemoveAt(tempHit.Count - 1);
-                allHitObjects.Add(tempHit);
-            }
-
-            List<List<string>> allUTimingPoints = GetUP(allTimingPoints);
-
-            using (uTimingPointsManager EBox = new uTimingPointsManager(allTimingPoints, allUTimingPoints, fileDirs))
-            {
-                Invoke((Action)(() => { EBox.ShowDialog(); }));
-                if (EBox.DialogResult == DialogResult.Ignore)
+                // Get the file Dirs
+                foreach (var file in ToMerge.Items)
                 {
-                    allTimingPoints = EBox.newTimingPoint;
-                    
-                    StartMerge(allHitObjects, allTimingPoints);
+                    fileDirs.Add($@"{dir}\{file}");
+                    noFiles = noFiles + 1;
                 }
-                else if (EBox.DialogResult == DialogResult.OK)
+
+                if (noFiles < 2)
                 {
-                    allTimingPoints = EBox.newTimingPoint;
-                    
-                    StartMerge(allHitObjects, allTimingPoints);
+                    throw ExceptionsHandling.noFilesFound;
                 }
                 else
                 {
-                    exc = ExceptionsHandling.operationCancelled;
+                    List<List<string>> allTimingPoints = new List<List<string>>();
+                    List<List<string>> allHitObjects = new List<List<string>>();
+
+                    foreach (var fileDir in fileDirs)
+                    {
+                        MapDataExtractor map = new MapDataExtractor(fileDir);
+
+                        List<string> tempTiming = map.GetTimingPString();
+                        tempTiming.RemoveAt(0);
+                        tempTiming.RemoveAt(tempTiming.Count - 1);
+                        tempTiming.RemoveAt(tempTiming.Count - 1);
+                        allTimingPoints.Add(tempTiming);
+
+                        List<string> tempHit = map.GetHitObjString();
+                        tempHit.RemoveAt(0);
+                        tempHit.RemoveAt(tempHit.Count - 1);
+                        allHitObjects.Add(tempHit);
+                    }
+
+                    List<List<string>> allUTimingPoints = GetUP(allTimingPoints);
+
+                    using (uTimingPointsManager eBox = new uTimingPointsManager(allTimingPoints, allUTimingPoints, fileDirs))
+                    {
+                        Invoke((Action)(() => { eBox.ShowDialog(); }));
+                        if (eBox.DialogResult == DialogResult.Ignore)
+                        {
+                            allTimingPoints = eBox.NewTimingPoint;
+
+                            StartMerge(allHitObjects, allTimingPoints);
+                        }
+                        else if (eBox.DialogResult == DialogResult.OK)
+                        {
+                            allTimingPoints = eBox.NewTimingPoint;
+
+                            StartMerge(allHitObjects, allTimingPoints);
+                        }
+                        else
+                        {
+                            exc = ExceptionsHandling.operationCancelled;
+                        }
+                    }
+
+                    return exc;
                 }
             }
-
-
-
-            return exc;
+            catch(Exception exc)
+            {
+                return exc;
+            }
         }
 
-        private List<List<string>> GetUP(List<List<string>> TimingPoints)
+        // Gets the uninherited points of timing points from multiple files
+        private List<List<string>> GetUP(List<List<string>> timingPoints)
         {
-            List<List<string>> UninheritedPoints = new List<List<string>>();
+            List<List<string>> uninheritedPoints = new List<List<string>>();
 
-            for (int y = 0; y < TimingPoints.Count; y = y + 1)
+            for (int y = 0; y < timingPoints.Count; y = y + 1)
             {
-                for (int i = 0; i < TimingPoints[y].Count; i = i + 1)
+                for (int i = 0; i < timingPoints[y].Count; i = i + 1)
                 {
-                    string[] split = TimingPoints[y][i].Split(',');
+                    string[] split = timingPoints[y][i].Split(',');
 
-                    List<string> Temp = new List<string>();
+                    List<string> temp = new List<string>();
 
                     if (!split[1].Contains("-"))
                     {
-                        Temp.Add(split[0]);
-                        Temp.Add(split[1]);
-                        Temp.Add(y.ToString());
-                        UninheritedPoints.Add(Temp);
-
+                        temp.Add(split[0]);
+                        temp.Add(split[1]);
+                        temp.Add(y.ToString());
+                        uninheritedPoints.Add(temp);
                     }
                 }
             }
 
-            return UninheritedPoints;
+            return uninheritedPoints;
         }
 
-
-        private void StartMerge(List<List<string>> HitObjects, List<List<string>> TimingPoints)
+        // The actual process of the merging
+        private void StartMerge(List<List<string>> hitObjects, List<List<string>> himingPoints)
         {
-            List<string> FinalHitObjects = mergeLists(HitObjects, false);
-            List<string> FinalTimingPoints = mergeLists(TimingPoints, true);
+            List<string> finalHitObjects = MergeLists(hitObjects, false);
+            List<string> finalTimingPoints = MergeLists(himingPoints, true);
 
-            StreamReader sr = new StreamReader($@"{Dir}\{ToMerge.Items[0]}");
+            StreamReader sr = new StreamReader($@"{dir}\{ToMerge.Items[0]}");
 
             var line = sr.ReadLine();
 
@@ -230,12 +240,12 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
 
             template.Add("[TimingPoints]");
 
-            foreach (var lines in FinalTimingPoints)
+            foreach (var lines in finalTimingPoints)
             {
                 template.Add(lines);
             }
 
-            while (line != "")
+            while (line != string.Empty)
             {
                 line = sr.ReadLine();
             }
@@ -248,71 +258,73 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
 
             template.Add("[HitObjects]");
 
-            foreach (var lines in FinalHitObjects)
+            foreach (var lines in finalHitObjects)
             {
                 template.Add(lines);
             }
 
-            //close the file
+            // close the file
             sr.Close();
 
-            
             string templateOsuName = $"{ToMerge.Items[0]}";
             string[] splitTemp = templateOsuName.Split('[');
 
-            string FileName = $"{splitTemp[0]}[Merged File]";
-            string BaseFileName = $"{FileName}";
+            string fileName = $"{splitTemp[0]}[Merged File]";
+            string baseFileName = $"{fileName}";
             int i = 1;
 
-            while (File.Exists($"{Dir}/{FileName}.osu")) // https://stackoverflow.com/questions/5270919/always-create-new-file-if-file-already-exists-with-same-location-in-c-sharp
+            // https://stackoverflow.com/questions/5270919/always-create-new-file-if-file-already-exists-with-same-location-in-c-sharp
+            while (File.Exists($"{dir}/{fileName}.osu")) 
             {
                 i = i + 1;
-                FileName = $"{BaseFileName}({i})";
+                fileName = $"{baseFileName}({i})";
             }
 
-            TextWriter writer = new StreamWriter($@"{Dir}/{FileName}.osu", true);
+            TextWriter writer = new StreamWriter($@"{dir}/{fileName}.osu", true);
 
             foreach (var lines in template)
             {
                 writer.WriteLine(lines);
             }
-            writer.Close();
 
-            
+            writer.Close();
         }
 
-        public static List<string> mergeLists(List<List<string>> input, bool IsItTimingPoint)
+        // Merges two list into one
+        public static List<string> MergeLists(List<List<string>> input, bool isItTimingPoint)
         {
-            List<string> Merged = new List<string>();
+            List<string> merged = new List<string>();
 
             foreach (var file in input)
             {
-                Merged.AddRange(file);
+                merged.AddRange(file);
             }
 
-            sort(Merged, IsItTimingPoint, 0, Merged.Count - 1);
+            Sort(merged, isItTimingPoint, 0, merged.Count - 1);
 
-            return Merged;
+            return merged;
         }
 
-        private static void sort(List<string> input, bool IsItTimingPoint, int lo, int hi) // https://en.wikipedia.org/wiki/Quicksort
+        // Uses a quick sort to sort the merged list on the offset
+        #region quick sort
+        private static void Sort(List<string> input, bool isItTimingPoint, int lo, int hi) // https://en.wikipedia.org/wiki/Quicksort
         {
             if (lo < hi)
             {
-                int pi = Partition(input, lo, hi, IsItTimingPoint);
-                sort(input, IsItTimingPoint, lo, pi - 1);
-                sort(input, IsItTimingPoint, pi + 1, hi);
+                int pi = Partition(input, lo, hi, isItTimingPoint);
+                Sort(input, isItTimingPoint, lo, pi - 1);
+                Sort(input, isItTimingPoint, pi + 1, hi);
             }
         }
 
-        private static int Partition(List<string> input, int lo, int hi, bool IsItTimingPoint)
+        private static int Partition(List<string> input, int lo, int hi, bool isItTimingPoint)
         {
-            int pivot = ConvertLineToOffset(input[hi], IsItTimingPoint);
+            int pivot = ConvertLineToOffset(input[hi], isItTimingPoint);
             int i = lo - 1;
 
             for (int j = lo; j < hi; j = j + 1)
             {
-                if (ConvertLineToOffset(input[j], IsItTimingPoint) < pivot)
+                if (ConvertLineToOffset(input[j], isItTimingPoint) < pivot)
                 {
                     i = i + 1;
 
@@ -329,11 +341,11 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
             return i + 1;
         }
 
-        private static int ConvertLineToOffset(string input, bool IsItTimingPoint)
+        private static int ConvertLineToOffset(string input, bool isItTimingPoint)
         {
             int offset = 0;
             string[] tempArray = input.Split(',');
-            if (IsItTimingPoint)
+            if (isItTimingPoint)
             {
                 offset = Convert.ToInt32(tempArray[0]);
             }
@@ -341,9 +353,9 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
             {
                 offset = Convert.ToInt32(tempArray[2]);
             }
+
             return offset;
         }
-
-
+        #endregion
     }
 }

@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace OsuCollabTool.Main_Classes.MergerFunc
 {
     public partial class CompareLog : Form
     {
-        List<string> file1T = new List<string>();
-        List<string> file2T = new List<string>();
-        List<string> file1H = new List<string>();
-        List<string> file2H = new List<string>();
+        private List<string> file1T = new List<string>();
+        private List<string> file2T = new List<string>();
+        private List<string> file1H = new List<string>();
+        private List<string> file2H = new List<string>();
+
         public CompareLog(List<string> file1TIn, List<string> file2TIn, List<string> file1HIn, List<string> file2HIn, List<string> songNames)
         {
             InitializeComponent();
@@ -25,10 +20,10 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
             file1H = file1HIn;
             file2H = file2HIn;
 
-            populateListBoxes(file1T,TPFile1);
-            populateListBoxes(file2T, TPFile2);
-            populateListBoxes(file1H, HOFile1);
-            populateListBoxes(file2H, HOFile2);
+            PopulateListBoxes(file1T, TPFile1);
+            PopulateListBoxes(file2T, TPFile2);
+            PopulateListBoxes(file1H, HOFile1);
+            PopulateListBoxes(file2H, HOFile2);
 
             File1NameT.Text = songNames[0];
             File1NameH.Text = songNames[0];
@@ -36,15 +31,17 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
             File2NameH.Text = songNames[1];
         }
 
-        private void populateListBoxes(List<string> list, ListBox control)
+        // Populates the boxes with the unique objects
+        private void PopulateListBoxes(List<string> list, ListBox control)
         {
             foreach (var line in list)
             {
                 control.Items.Add(line);
-                
             }
         }
 
+        // Used for copying the offset of the selected item, so the user can refer it to the editor
+        #region for copy
         private void TP_KeyDown(object sender, KeyEventArgs e)
         {
             try
@@ -53,7 +50,7 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
                 {
                     string s = (sender as ListBox).SelectedItem.ToString();
                     string[] temp = s.Split(',');
-                    
+
                     string copyText = temp[0];
 
                     Clipboard.SetText(copyText);
@@ -85,15 +82,13 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
             }
         }
 
-        
-
         private void ClickedTP(object sender, EventArgs e)
         {
             ListBox control = sender as ListBox;
 
             string tagNum = control.Tag.ToString();
 
-            if(tagNum == "1")
+            if (tagNum == "1")
             {
                 TPFile2.ClearSelected();
             }
@@ -102,5 +97,6 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
                 TPFile1.ClearSelected();
             }
         }
+        #endregion
     }
 }

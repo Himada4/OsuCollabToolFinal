@@ -1,51 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using OsuCollabTool.UI;
-using OsuCollabTool.CoreClasses;
 using System.IO;
+using System.Windows.Forms;
+using OsuCollabTool.CoreClasses;
+using OsuCollabTool.UI;
 
 namespace OsuCollabTool.Main_Classes.SongSetupFunc
 {
     public partial class MetaDataIntf : Form
     {
         private UIDataExtractor ext = new UIDataExtractor();
-        private string Dir = "";
-        
+        private string dir = string.Empty;
 
-        
-           
-        private string BeatmapID = "";
-        private string BeatmapSetID = "";
-        
-        string[,] metaData;
+        private string beatmapID = string.Empty;
+        private string beatmapSetID = string.Empty;
 
+        private string[,] metaData;
 
         public MetaDataIntf()
         {
             InitializeComponent();
 
             ext = new UIDataExtractor();
-            Color[] Theme = ext.getTheme();
-            
-            Dir = $@"{ext.getSongFol()}{ext.getCurrFol()}{ext.getCurrOsu()}";
+            Color[] theme = ext.GetTheme();
 
-            //Interface Theme Set
-            Common.setBGCol(Theme[2], SecMainBG, MainBG);
-            Common.setBtnCol(Theme[1], SaveBtn);
-            Common.ContrastColor(Theme[1], SaveBtn);
-            Common.ContrastColor(Theme[2],  TitleGroupBox,ArtistGroupBox,CreatorGroupBox,VersionName,SourceGroupBox,TagsGroupBox,RTlabel,UTLabel,RALabel,UALabel, ApplyChangesMapset);
+            dir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}{ext.GetCurrOsu()}";
 
+            // Interface Theme Set
+            Common.SetBGCol(theme[2], SecMainBG, MainBG);
+            Common.SetBtnCol(theme[1], SaveBtn);
+            Common.ContrastColor(theme[1], SaveBtn);
+            Common.ContrastColor(theme[2], TitleGroupBox, ArtistGroupBox, CreatorGroupBox, VersionName, SourceGroupBox, TagsGroupBox, RTlabel, UTLabel, RALabel, UALabel, ApplyChangesMapset);
 
-            // fill in field
-
-            MapDataExtractor data = new MapDataExtractor(Dir);
+            // Fill in field
+            MapDataExtractor data = new MapDataExtractor(dir);
 
             metaData = data.GetMetadata();
 
@@ -54,29 +43,35 @@ namespace OsuCollabTool.Main_Classes.SongSetupFunc
                 switch (i)
                 {
                     case 0:
-                         RTTextBox.Text = metaData[1,i];
-                        
+                        RTTextBox.Text = metaData[1, i];
+
                         break;
+
                     case 1:
                         UTTextBox.Text = metaData[1, i];
 
                         break;
+
                     case 2:
                         RATextBox.Text = metaData[1, i];
 
                         break;
+
                     case 3:
                         UATextBox.Text = metaData[1, i];
 
                         break;
+
                     case 4:
                         MapperNameTextBox.Text = metaData[1, i];
 
                         break;
+
                     case 5:
                         DiffNameTextBox.Text = metaData[1, i];
 
                         break;
+
                     case 6:
                         SourceTextBox.Text = metaData[1, i];
                         break;
@@ -84,22 +79,22 @@ namespace OsuCollabTool.Main_Classes.SongSetupFunc
                     case 7:
                         TagsTextBox.Text = metaData[1, i];
                         break;
+
                     case 8:
-                        BeatmapID = metaData[1, i];
+                        beatmapID = metaData[1, i];
                         break;
+
                     case 9:
-                        BeatmapSetID = metaData[1, i];
+                        beatmapSetID = metaData[1, i];
                         break;
                 }
             }
-
         }
 
+        // Saves the metadata, overwrites it on to the .osu file
         private void SaveBtn_Click(object sender, EventArgs e)
         {
             List<string> newInput = new List<string>();
-
-
 
             newInput.Add("[Metadata]");
 
@@ -108,53 +103,61 @@ namespace OsuCollabTool.Main_Classes.SongSetupFunc
                 switch (i)
                 {
                     case 0:
-                        newInput.Add($"{metaData[0,i]}:{RTTextBox.Text}");
+                        newInput.Add($"{metaData[0, i]}:{RTTextBox.Text}");
 
                         break;
-                    case 1: 
+
+                    case 1:
                         newInput.Add($"{metaData[0, i]}:{UTTextBox.Text}");
                         break;
+
                     case 2:
-                        
+
                         newInput.Add($"{metaData[0, i]}:{RATextBox.Text}");
                         break;
+
                     case 3:
-                        
+
                         newInput.Add($"{metaData[0, i]}:{UATextBox.Text}");
                         break;
+
                     case 4:
-                        
+
                         newInput.Add($"{metaData[0, i]}:{MapperNameTextBox.Text}");
                         break;
+
                     case 5:
-                        
+
                         newInput.Add($"{metaData[0, i]}:{DiffNameTextBox.Text}");
                         break;
+
                     case 6:
-                        
+
                         newInput.Add($"{metaData[0, i]}:{SourceTextBox.Text}");
                         break;
 
                     case 7:
-                        
+
                         newInput.Add($"{metaData[0, i]}:{TagsTextBox.Text}");
                         break;
+
                     case 8:
-                        
-                        newInput.Add($"{metaData[0, i]}:{BeatmapID}");
+
+                        newInput.Add($"{metaData[0, i]}:{beatmapID}");
                         break;
+
                     case 9:
-                        
-                        newInput.Add($"{metaData[0, i]}:{BeatmapSetID}");
+
+                        newInput.Add($"{metaData[0, i]}:{beatmapSetID}");
                         break;
                 }
             }
 
-            newInput.Add("");
+            newInput.Add(string.Empty);
 
-            if(ApplyChangesMapset.Checked == true)
+            if (ApplyChangesMapset.Checked == true)
             {
-                string[] files = Directory.GetFiles($@"{ext.getSongFol()}{ext.getCurrFol()}");
+                string[] files = Directory.GetFiles($@"{ext.GetSongFol()}{ext.GetCurrFol()}");
 
                 List<string> mapset = new List<string>();
 
@@ -162,33 +165,28 @@ namespace OsuCollabTool.Main_Classes.SongSetupFunc
                 {
                     if (file.Contains(".osu"))
                     {
-                        mapset.Add($@"{ext.getSongFol()}{ext.getCurrFol()}\{Path.GetFileName(file)}");
+                        mapset.Add($@"{ext.GetSongFol()}{ext.GetCurrFol()}\{Path.GetFileName(file)}");
                     }
                 }
 
-                
-
-                foreach(var map in mapset)
+                foreach (var map in mapset)
                 {
                     MapDataExtractor data = new MapDataExtractor(map);
                     string[,] tempData = data.GetMetadata();
 
                     string SeperateVersionName = ($"{tempData[0, 5]}:{tempData[1, 5]}");
-                    string MapID = ($"{tempData[0,8]}:{tempData[1,8]}");
+                    string MapID = ($"{tempData[0, 8]}:{tempData[1, 8]}");
 
                     newInput[6] = SeperateVersionName;
                     newInput[9] = MapID;
 
                     Common.ReplaceFileWithNewData(map, 3, newInput);
-                } 
+                }
             }
             else
             {
-                Common.ReplaceFileWithNewData(Dir, 3, newInput);
+                Common.ReplaceFileWithNewData(dir, 3, newInput);
             }
-
-            
-
         }
     }
 }

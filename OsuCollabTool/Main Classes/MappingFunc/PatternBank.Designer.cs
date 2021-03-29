@@ -177,6 +177,7 @@
             this.OpenFolderLoc.TabIndex = 10;
             this.OpenFolderLoc.Text = "Open Pattern Bank Folder";
             this.OpenFolderLoc.UseVisualStyleBackColor = true;
+            this.OpenFolderLoc.Click += new System.EventHandler(this.OpenFolderLoc_Click);
             // 
             // label3
             // 
