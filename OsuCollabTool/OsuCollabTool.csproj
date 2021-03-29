@@ -181,6 +181,7 @@
     </Compile>
     <Compile Include="Main Classes\SongSetupFunc\MetaDataIntf.cs">
       <SubType>Form</SubType>
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Main Classes\SongSetupFunc\MetaDataIntf.Designer.cs">
       <DependentUpon>MetaDataIntf.cs</DependentUpon>
