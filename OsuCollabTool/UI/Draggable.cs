@@ -3,12 +3,12 @@ using System.Windows.Forms;
 
 namespace OsuCollabTool.UI
 {
-    internal class Draggable //Credit: https://www.youtube.com/watch?v=cpc-2flmaK4
+    internal class Draggable // Credit: https://www.youtube.com/watch?v=cpc-2flmaK4
     {
         private Form form;
         private int formBorder;
-        private bool _dragging = false;
-        private Point _start_point = new Point(0, 0);
+        private bool dragging = false;
+        private Point startPoint = new Point(0, 0);
         private int screenWidth = Screen.PrimaryScreen.WorkingArea.Width;
         private int screenHeight = Screen.PrimaryScreen.WorkingArea.Height;
         private int screenTopBorder = 0;
@@ -34,15 +34,15 @@ namespace OsuCollabTool.UI
         {
             if (e.Button == MouseButtons.Left)
             {
-                _dragging = true;
-                _start_point = new Point(e.X, e.Y);
+                dragging = true;
+                startPoint = new Point(e.X, e.Y);
                 hitBorder = 0;
             }
         }
 
         private void _MouseUp(object sender, MouseEventArgs e)
         {
-            _dragging = false;
+            dragging = false;
 
             #region custom edit for hitting borders
 
@@ -61,14 +61,14 @@ namespace OsuCollabTool.UI
 
             switch (hitBorder)
             {
-                case (0):
+                case 0:
                     break;
 
-                case (1): //if hits right
+                case 1: // If hits right
                     form.Location = new Point(screenWidth - form.Size.Width, screenTopBorder);
                     break;
 
-                case (2): //if hits left
+                case 2: // If hits left
                     form.Location = new Point(screenTopBorder, screenTopBorder);
                     break;
             }
@@ -76,17 +76,17 @@ namespace OsuCollabTool.UI
 
         private void _MouseMove(object sender, MouseEventArgs e)
         {
-            if (_dragging)
+            if (dragging)
             {
                 Point p = form.PointToScreen(e.Location);
-                form.Location = new Point(p.X - this._start_point.X, p.Y - this._start_point.Y);
+                form.Location = new Point(p.X - this.startPoint.X, p.Y - this.startPoint.Y);
                 if (screenTopBorder >= form.Location.Y)
                 {
-                    form.Location = new Point(p.X - this._start_point.X, screenTopBorder);
+                    form.Location = new Point(p.X - this.startPoint.X, screenTopBorder);
                 }
                 else if (screenHeight <= form.Location.Y + formBorder)
                 {
-                    form.Location = new Point(p.X - this._start_point.X, screenHeight - formBorder);
+                    form.Location = new Point(p.X - this.startPoint.X, screenHeight - formBorder);
                 }
             }
         }
