@@ -247,7 +247,7 @@ namespace OsuCollabTool
 
         private Form activeForm = null;
 
-        private void OpenChildForm(Form childForm) // Used for opening the child forms, aka the features
+        private void OpenChildForm(Form childForm) // Used for opening the child forms
         {
             if (activeForm != null)
             { activeForm.Close(); }
