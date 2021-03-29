@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Media\Osu collab Tool icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EditorReader">
       <HintPath>Packages\osuReader\EditorReader.dll</HintPath>
@@ -269,6 +272,7 @@
     <Content Include="Media\Convert-To3.png" />
     <Content Include="Media\Information.png" />
     <Content Include="Media\minimise.png" />
+    <Content Include="Media\Osu collab Tool icon.ico" />
     <Content Include="Media\Preferences.png" />
   </ItemGroup>
   <ItemGroup />
