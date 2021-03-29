@@ -9,31 +9,33 @@ namespace OsuCollabTool.CoreClasses
 {
     class TimingPoints
     {
-        string MapDir = "";
-        public TimingPoints(string MapDirIn)
+        string mapDir = string.Empty;
+
+        public TimingPoints(string mapDirIn)
         {
-            MapDir = MapDirIn;
+            mapDir = mapDirIn;
         }
+
         public List<string> GetRawData()
         {
-            StreamReader sr = new StreamReader($@"{MapDir}");
+            StreamReader sr = new StreamReader($@"{mapDir}");
             var line = sr.ReadLine();
 
-            List<string> Data = new List<string>();
+            List<string> data = new List<string>();
 
             while (!line.Contains("[TimingPoints]"))
             {
                 line = sr.ReadLine();
-            } 
+            }
+            
             while (!line.Contains("[Colours]")  && !line.Contains("[HitObjects]") )
             {
-                Data.Add(line);
+                data.Add(line);
                 line = sr.ReadLine();
             }
-            sr.Close();
-            return Data;
-        }
 
-        
+            sr.Close();
+            return data;
+        }
     }
 }

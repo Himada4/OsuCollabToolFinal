@@ -1,47 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.IO;
 
 namespace OsuCollabTool.CoreClasses
 {
-    class Colours
+    internal class Colours
     {
-        string MapDir = "";
-        public Colours(string MapDirIn)
+        private string mapDir = string.Empty;
+
+        public Colours(string mapDirIn)
         {
-            MapDir = MapDirIn;
+            mapDir = mapDirIn;
         }
-        StreamReader sr;
+
+        private StreamReader sr;
+
         public List<string> GetRawData()
         {
-            try 
+            try
             {
-                sr = new StreamReader($@"{MapDir}");
+                sr = new StreamReader($@"{mapDir}");
                 var line = sr.ReadLine();
 
-                List<string> Data = new List<string>();
+                List<string> data = new List<string>();
 
                 while (!line.Contains("[Colours]"))
                 {
                     line = sr.ReadLine();
                 }
+
                 while (!line.Contains("[HitObjects]"))
                 {
-                    Data.Add(line);
+                    data.Add(line);
                     line = sr.ReadLine();
                 }
 
                 sr.Close();
-                return Data;
+                return data;
             }
             catch
             {
                 sr.Close();
-                return new List<string>() {""};
+                return new List<string>() { string.Empty };
             }
         }
     }
-} 
+}

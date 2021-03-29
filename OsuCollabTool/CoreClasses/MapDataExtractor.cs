@@ -1,99 +1,85 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
+﻿using System.Collections.Generic;
 
 namespace OsuCollabTool.CoreClasses
 {
-    class MapDataExtractor
+    internal class MapDataExtractor
     {
-        string MapDir = "";
+        private string mapDir = string.Empty;
         public static int DataRows = 2;
-        public MapDataExtractor(string MapDirIn)
-        {
-            MapDir = MapDirIn;
-        }
 
+        public MapDataExtractor(string mapDirIn)
+        {
+            mapDir = mapDirIn;
+        }
 
         // Specialised output
         public string[,] GetGeneral()
         {
-            var Gen = new General(MapDir);
+            var gen = new General(mapDir);
 
-            return Gen.ReadDataFormatted(Gen.GetRawData());
+            return gen.ReadDataFormatted(gen.GetRawData());
         }
-        public List<string> GetEditor()
-        {
-            var Edi = new Editor(MapDir);
-            return Edi.GetRawData();
-        }
+
         public string[,] GetMetadata()
         {
-            var Met = new Metadata(MapDir);
-            return Met.ReadDataFormatted((Met.GetRawData()));
+            var met = new Metadata(mapDir);
+            return met.ReadDataFormatted((met.GetRawData()));
         }
+
         public string[,] GetDiff()
         {
-            var Diff = new Difficulty(MapDir);
-            return Diff.ReadDataFormatted(Diff.GetRawData());
-        }
-        public List<string> GetEvents()
-        {
-            var Eve = new Events(MapDir);
-            return Eve.GetRawData();
-        }
-        
-        
-        public List<string> GetColour()
-        {
-            var Col = new Colours(MapDir);
-            return Col.GetRawData();
+            var diff = new Difficulty(mapDir);
+            return diff.ReadDataFormatted(diff.GetRawData());
         }
 
-
-        //string output
+        // string output
         public List<string> GetGeneralString()
         {
-            var Gen = new General(MapDir);
+            var gen = new General(mapDir);
 
-            return Gen.GetRawData();
+            return gen.GetRawData();
         }
+
         public List<string> GetEditorString()
         {
-            var Edi = new Editor(MapDir);
-            return Edi.GetRawData();
+            var edi = new Editor(mapDir);
+            return edi.GetRawData();
         }
+
         public List<string> GetMetadataString()
         {
-            var Met = new Metadata(MapDir);
-            return Met.GetRawData();
+            var met = new Metadata(mapDir);
+            return met.GetRawData();
         }
+
         public List<string> GetDiffString()
         {
-            var Diff = new Difficulty(MapDir);
-            return Diff.GetRawData();
+            var diff = new Difficulty(mapDir);
+            return diff.GetRawData();
         }
+
         public List<string> GetEventsString()
         {
-            var Eve = new Events(MapDir);
-            return Eve.GetRawData();
+            var eve = new Events(mapDir);
+            return eve.GetRawData();
         }
+
         public List<string> GetTimingPString()
         {
-            var TiP = new TimingPoints(MapDir);
-            return TiP.GetRawData();
+            var tim = new TimingPoints(mapDir);
+            return tim.GetRawData();
         }
+
         public List<string> GetHitObjString()
         {
-            var HiT = new HitObjects(MapDir);
-            return HiT.GetRawData();
+            var hit = new HitObjects(mapDir);
+            return hit.GetRawData();
         }
+
         public List<string> GetColourString()
         {
-            var Col = new Colours(MapDir);
-            return Col.GetRawData();
+            var col = new Colours(mapDir);
+            return col.GetRawData();
         }
     }
 }

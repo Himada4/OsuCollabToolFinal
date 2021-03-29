@@ -9,31 +9,33 @@ namespace OsuCollabTool.CoreClasses
 {
     class HitObjects
     {
-        string MapDir = "";
-        public HitObjects(string MapDirIn)
+        string mapDir = string.Empty;
+
+        public HitObjects(string mapDirIn)
         {
-            MapDir = MapDirIn;
+            mapDir = mapDirIn;
         }
 
         public List<string> GetRawData()
         {
-            StreamReader sr = new StreamReader($@"{MapDir}");
+            StreamReader sr = new StreamReader($@"{mapDir}");
             var line = sr.ReadLine();
 
-            List<string> Data = new List<string>();
+            List<string> data = new List<string>();
 
             while (line.Contains("[HitObjects]") == false)
             {
                 line = sr.ReadLine();
             }
+
             while (line != null)
             {
-                Data.Add(line);
+                data.Add(line);
                 line = sr.ReadLine();
             }
 
             sr.Close();
-            return Data;
+            return data;
         } 
     }
 }
