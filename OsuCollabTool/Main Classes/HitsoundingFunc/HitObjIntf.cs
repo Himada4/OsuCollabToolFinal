@@ -39,35 +39,42 @@ namespace OsuCollabTool.Main_Classes.HitsoundingFunc
                 }
             }
 
-            AudioFileReader duration = new AudioFileReader(audioDir);
-            TimeSpan durationInt = duration.TotalTime;
-            int totalTime = (int)durationInt.TotalMilliseconds;
+            try
+            {
+                AudioFileReader duration = new AudioFileReader(audioDir);
+                TimeSpan durationInt = duration.TotalTime;
+                int totalTime = (int)durationInt.TotalMilliseconds;
 
-            int minutes = totalTime / 1000 / 60;
-            int minMili = minutes * 1000 * 60;
-            int seconds = (totalTime - minMili) / 1000;
-            int secMili = seconds * 1000;
-            int miliseconds = totalTime - minMili - secMili;
+                int minutes = totalTime / 1000 / 60;
+                int minMili = minutes * 1000 * 60;
+                int seconds = (totalTime - minMili) / 1000;
+                int secMili = seconds * 1000;
+                int miliseconds = totalTime - minMili - secMili;
 
-            MaxDurStart.Text = $"{minutes}:{seconds}:{miliseconds}";
-            MaxDurUntil.Text = $"{minutes}:{seconds}:{miliseconds}";
+                MaxDurStart.Text = $"{minutes}:{seconds}:{miliseconds}";
+                MaxDurUntil.Text = $"{minutes}:{seconds}:{miliseconds}";
 
-            StartTrackBar.Maximum = totalTime;
-            UntilTrackBar.Maximum = totalTime;
+                StartTrackBar.Maximum = totalTime;
+                UntilTrackBar.Maximum = totalTime;
 
-            StartTrackBar.TickFrequency = 60 * 1000;
-            UntilTrackBar.TickFrequency = 60 * 1000;
+                StartTrackBar.TickFrequency = 60 * 1000;
+                UntilTrackBar.TickFrequency = 60 * 1000;
 
-            StartTrackBar.Scroll += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, StartTrackBar));
-            UntilTrackBar.Scroll += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, UntilTrackBar));
+                StartTrackBar.Scroll += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, StartTrackBar));
+                UntilTrackBar.Scroll += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, UntilTrackBar));
 
-            string[] samplesetTypes = new string[] { "Auto", "Normal", "Soft", "Drum" };
-            sampleSetCombo.Items.AddRange(samplesetTypes);
-            additionalCombo.Items.AddRange(samplesetTypes);
-            selectSampleset.Items.AddRange(samplesetTypes);
-            selectAdditional.Items.AddRange(samplesetTypes);
-            SelectSamplesetBox.Enabled = false;
-            SelectTimestampBox.Enabled = false;
+                string[] samplesetTypes = new string[] { "Auto", "Normal", "Soft", "Drum" };
+                sampleSetCombo.Items.AddRange(samplesetTypes);
+                additionalCombo.Items.AddRange(samplesetTypes);
+                selectSampleset.Items.AddRange(samplesetTypes);
+                selectAdditional.Items.AddRange(samplesetTypes);
+                SelectSamplesetBox.Enabled = false;
+                SelectTimestampBox.Enabled = false;
+            }
+            catch
+            {
+                this.Close();
+            }
         }
 
         #region Track Bar related Operations

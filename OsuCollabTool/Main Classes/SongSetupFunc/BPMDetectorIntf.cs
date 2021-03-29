@@ -36,22 +36,28 @@ namespace OsuCollabTool.Main_Classes.SongSetupFunc
                     audioDir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}\{Path.GetFileName(file)}";
                 }
             }
+            try
+            {
+                AudioFileReader duration = new AudioFileReader(audioDir);
+                TimeSpan durationInt = duration.TotalTime;
+                totalTime = (int)durationInt.TotalSeconds;
 
-            AudioFileReader duration = new AudioFileReader(audioDir);
-            TimeSpan durationInt = duration.TotalTime;
-            totalTime = (int)durationInt.TotalSeconds;
+                MaxDurStart.Text = $"{totalTime / 60}:{totalTime - (totalTime / 60) * 60}";
+                MaxDurUntil.Text = $"{totalTime / 60}:{totalTime - (totalTime / 60) * 60}";
 
-            MaxDurStart.Text = $"{totalTime / 60}:{totalTime - (totalTime / 60) * 60}";
-            MaxDurUntil.Text = $"{totalTime / 60}:{totalTime - (totalTime / 60) * 60}";
+                StartTrackBar.Maximum = totalTime;
+                UntilTrackBar.Maximum = totalTime;
 
-            StartTrackBar.Maximum = totalTime;
-            UntilTrackBar.Maximum = totalTime;
+                StartTrackBar.Scroll += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, StartTrackBar));
+                UntilTrackBar.Scroll += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, UntilTrackBar));
 
-            StartTrackBar.Scroll += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, StartTrackBar));
-            UntilTrackBar.Scroll += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, UntilTrackBar));
-
-            StartTrackBar.MouseEnter += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, StartTrackBar));
-            UntilTrackBar.MouseEnter += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, UntilTrackBar));
+                StartTrackBar.MouseEnter += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, StartTrackBar));
+                UntilTrackBar.MouseEnter += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, UntilTrackBar));
+            }
+            catch
+            {
+                this.Close();
+            }
         }
 
         // Tracks the trackbar

@@ -38,25 +38,31 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
                     audioDir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}\{Path.GetFileName(file)}";
                 }
             }
+            try
+            {
+                AudioFileReader duration = new AudioFileReader(audioDir);
+                TimeSpan durationInt = duration.TotalTime;
+                totalTime = (int)durationInt.TotalMilliseconds;
 
-            AudioFileReader duration = new AudioFileReader(audioDir);
-            TimeSpan durationInt = duration.TotalTime;
-            totalTime = (int)durationInt.TotalMilliseconds;
+                int minutes = totalTime / 1000 / 60;
+                int minMili = minutes * 1000 * 60;
+                int seconds = (totalTime - minMili) / 1000;
+                int secMili = seconds * 1000;
+                int miliseconds = totalTime - minMili - secMili;
 
-            int minutes = totalTime / 1000 / 60;
-            int minMili = minutes * 1000 * 60;
-            int seconds = (totalTime - minMili) / 1000;
-            int secMili = seconds * 1000;
-            int miliseconds = totalTime - minMili - secMili;
+                MaxDurStart.Text = $"{minutes}:{seconds}:{miliseconds}";
+                MaxDurUntil.Text = $"{minutes}:{seconds}:{miliseconds}";
 
-            MaxDurStart.Text = $"{minutes}:{seconds}:{miliseconds}";
-            MaxDurUntil.Text = $"{minutes}:{seconds}:{miliseconds}";
+                StartTrackBar.Maximum = totalTime;
+                UntilTrackBar.Maximum = totalTime;
 
-            StartTrackBar.Maximum = totalTime;
-            UntilTrackBar.Maximum = totalTime;
-
-            StartTrackBar.Scroll += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, StartTrackBar));
-            UntilTrackBar.Scroll += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, UntilTrackBar));
+                StartTrackBar.Scroll += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, StartTrackBar));
+                UntilTrackBar.Scroll += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, UntilTrackBar));
+            }
+            catch
+            {
+                this.Close();
+            }
         }
 
         // Tracks the track bar
