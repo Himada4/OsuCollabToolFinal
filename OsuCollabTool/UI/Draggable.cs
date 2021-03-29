@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace OsuCollabTool.UI
 {
-    internal class Draggable // Credit: https://www.youtube.com/watch?v=cpc-2flmaK4
+    internal class Draggable // Credit: https://www.youtube.com/watch?v=cpc-2flmaK4 -> Allows border to be dragged
     {
         private Form form;
         private int formBorder;
@@ -20,7 +20,7 @@ namespace OsuCollabTool.UI
             formBorder = formBorderXSize;
         }
 
-        public void SetMovable(params Control[] controls)
+        public void SetMovable(params Control[] controls) // Adds EventHandlers to make the control interactable
         {
             foreach (Control control in controls)
             {

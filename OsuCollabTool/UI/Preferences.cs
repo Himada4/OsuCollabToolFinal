@@ -1,10 +1,11 @@
-﻿using OsuMemoryDataProvider;
+﻿using Editor_Reader;
+using OsuMemoryDataProvider;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Editor_Reader;
 
 namespace OsuCollabTool.UI
 {
@@ -15,46 +16,44 @@ namespace OsuCollabTool.UI
             InitializeComponent();
         }
 
-        private string SongFolder;
-        private Color[] Theme;
-        private int[] ButtonOrder;
-        private string CurrentFolder;
-        private string CurrentOsu;
-        
+        private string songFolder;
+        private Color[] theme;
+        private int[] buttonOrder;
+        private string currentFolder;
+        private string currentOsu;
 
         private void Preferences_Load(object sender, EventArgs e)
         {
             UIDataExtractor ext = new UIDataExtractor();
 
-            ext.refresh();
+            ext.Refresh();
 
-            SongFolder = ext.getSongFol();
-            Theme = ext.getTheme();
-            ButtonOrder = ext.getButOrd();
-            CurrentFolder = ext.getCurrFol();
-            CurrentOsu = ext.getCurrOsu();
-            
+            songFolder = ext.GetSongFol();
+            theme = ext.GetTheme();
+            buttonOrder = ext.GetButOrd();
+            currentFolder = ext.GetCurrFol();
+            currentOsu = ext.GetCurrOsu();
 
-            #region field setup
+            SongFolTxb.Text = songFolder;
+            CurrFolTxb.Text = currentFolder;
+            CurrOsuTxb.Text = currentOsu;
 
-            SongFolTxb.Text = SongFolder;
-            CurrFolTxb.Text = CurrentFolder;
-            CurrOsuTxb.Text = CurrentOsu;
+            BorderCol.BackColor = theme[0];
+            BtnCol.BackColor = theme[1];
+            BGCol.BackColor = theme[2];
 
-            BorderCol.BackColor = Theme[0];
-            BtnCol.BackColor = Theme[1];
-            BGCol.BackColor = Theme[2];
+            // Deals with the button order
 
             #region button order
 
-            List<Button> CurrBtnOrder = DetectButtonOrder();
+            List<Button> currBtnOrder = DetectbuttonOrder();
             List<Button> buttons = new List<Button>();
 
-            foreach (var b in CurrBtnOrder)
+            foreach (var b in currBtnOrder)
             {
-                for (int i = 0; i < ButtonOrder.Length; i = i + 1)
+                for (int i = 0; i < buttonOrder.Length; i = i + 1)
                 {
-                    if (ButtonOrder[i] == b.TabIndex)
+                    if (buttonOrder[i] == b.TabIndex)
                     {
                         b.Tag = i + 1;
                         buttons.Add(b);
@@ -76,9 +75,11 @@ namespace OsuCollabTool.UI
                         minInd = i;
                     }
                 }
+
                 listResult.Add(buttons[minInd]);
                 buttons.RemoveAt(minInd);
             }
+
             int[] tabindex = new int[] { listResult[0].TabIndex, listResult[1].TabIndex, listResult[2].TabIndex, listResult[3].TabIndex };
             object[] tag = new object[] { listResult[0].Tag, listResult[1].Tag, listResult[2].Tag, listResult[3].Tag, };
 
@@ -92,28 +93,20 @@ namespace OsuCollabTool.UI
             ThirdPanel.Controls.Add(listResult[2]);
             FourthPanel.Controls.Add(listResult[3]);
 
-            #endregion button order
-
-            
-
-            #endregion field setup
-
-            #region event
-
             FirstPanel.AllowDrop = true;
             SecondPanel.AllowDrop = true;
             ThirdPanel.AllowDrop = true;
             FourthPanel.AllowDrop = true;
 
-            FirstPanel.DragEnter += panel_DragEnter;
-            SecondPanel.DragEnter += panel_DragEnter;
-            ThirdPanel.DragEnter += panel_DragEnter;
-            FourthPanel.DragEnter += panel_DragEnter;
+            FirstPanel.DragEnter += Panel_DragEnter;
+            SecondPanel.DragEnter += Panel_DragEnter;
+            ThirdPanel.DragEnter += Panel_DragEnter;
+            FourthPanel.DragEnter += Panel_DragEnter;
 
-            FirstPanel.DragDrop += panel_DragDrop;
-            SecondPanel.DragDrop += panel_DragDrop;
-            ThirdPanel.DragDrop += panel_DragDrop;
-            FourthPanel.DragDrop += panel_DragDrop;
+            FirstPanel.DragDrop += Panel_DragDrop;
+            SecondPanel.DragDrop += Panel_DragDrop;
+            ThirdPanel.DragDrop += Panel_DragDrop;
+            FourthPanel.DragDrop += Panel_DragDrop;
 
             FirstBtn.MouseDown += Buttons_MouseDown;
             SecondBtn.MouseDown += Buttons_MouseDown;
@@ -125,7 +118,7 @@ namespace OsuCollabTool.UI
             ThirdBtn.Enter += Btn_Enter;
             FourthBtn.Enter += Btn_Enter;
 
-            #endregion event
+            #endregion button order
         }
 
         #region song setup category
@@ -138,18 +131,18 @@ namespace OsuCollabTool.UI
             parent = ((Button)sender).Parent;
         }
 
-        private void Buttons_MouseDown(object sender, MouseEventArgs e) //https://stackoverflow.com/questions/11407068/how-to-drag-and-drop-a-button-from-one-panel-to-another-panel
+        private void Buttons_MouseDown(object sender, MouseEventArgs e) // https://stackoverflow.com/questions/11407068/how-to-drag-and-drop-a-button-from-one-panel-to-another-panel
         {
-            ((Button)sender).DoDragDrop(((Button)sender), DragDropEffects.Move);
-            btn = ((Button)sender);
+            ((Button)sender).DoDragDrop((Button)sender, DragDropEffects.Move);
+            btn = (Button)sender;
         }
 
-        private void panel_DragEnter(object sender, DragEventArgs e)
+        private void Panel_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.Move;
         }
 
-        private void panel_DragDrop(object sender, DragEventArgs e)
+        private void Panel_DragDrop(object sender, DragEventArgs e)
         {
             var child = ((Panel)sender).Controls.OfType<Button>();
 
@@ -173,7 +166,7 @@ namespace OsuCollabTool.UI
 
         #endregion song setup category
 
-        private List<Button> DetectButtonOrder()
+        private List<Button> DetectbuttonOrder()
         {
             List<Button> butList = new List<Button>();
             foreach (Panel p in ButtonOrderTablePanel.Controls)
@@ -186,6 +179,7 @@ namespace OsuCollabTool.UI
                     }
                 }
             }
+
             return butList;
         }
 
@@ -193,9 +187,9 @@ namespace OsuCollabTool.UI
 
         #region folder searches
 
-        private string songPath = "";
-        private string currFolPath = "";
-        private string currOsuPath = "";
+        private string songPath = string.Empty;
+        private string currFolPath = string.Empty;
+        private string currOsuPath = string.Empty;
 
         private void SongFolBtn_Click(object sender, EventArgs e)
         {
@@ -209,24 +203,27 @@ namespace OsuCollabTool.UI
 
         private void MapsetFolBtn_Click(object sender, EventArgs e)
         {
-            if (SongFolTxb.Text != "")
+            if (SongFolTxb.Text != string.Empty)
             {
                 folderBrowserDialog1.SelectedPath = SongFolTxb.Text;
                 if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                 {
                     currFolPath = folderBrowserDialog1.SelectedPath;
 
-                    currFolPath = currFolPath.Replace(SongFolTxb.Text, "");
+                    currFolPath = currFolPath.Replace(SongFolTxb.Text, string.Empty);
 
                     CurrFolTxb.Text = currFolPath;
                 }
             }
-            else { MessageBox.Show("Please select Song Folder path first!"); }
+            else
+            {
+                MessageBox.Show("Please select Song Folder path first!");
+            }
         }
 
         private void CurrOsubtn_Click(object sender, EventArgs e)
         {
-            if (CurrFolTxb.Text != "")
+            if (CurrFolTxb.Text != string.Empty)
             {
                 openFileDialog1.InitialDirectory = $@"{SongFolTxb.Text}{CurrFolTxb.Text}";
                 if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -235,42 +232,41 @@ namespace OsuCollabTool.UI
                     currOsuPath = $@"\{openFileDialog1.SafeFileName}";
                 }
             }
-            else { MessageBox.Show("Please select Mapset path first!"); }
+            else
+            {
+                MessageBox.Show("Please select Mapset path first!");
+            }
         }
 
         private void LiveScanFol_Click(object sender, EventArgs e)
         {
-            IOsuMemoryReader PioReader = OsuMemoryReader.Instance;
-            currFolPath = $@"\{PioReader.GetMapFolderName()}";
+            IOsuMemoryReader pioReader = OsuMemoryReader.Instance;
+            currFolPath = $@"\{pioReader.GetMapFolderName()}";
 
-            if(currFolPath == @"\")
+            if (currFolPath == @"\")
             {
-                EditorReader editorReader = new EditorReader(); 
+                EditorReader editorReader = new EditorReader();
                 editorReader.FetchHOM();
                 editorReader.FetchBeatmap();
                 currFolPath = $@"\{editorReader.ContainingFolder}";
-                
             }
-            CurrFolTxb.Text = currFolPath;
 
-            
-            
+            CurrFolTxb.Text = currFolPath;
         }
 
         private void LiveScanOsu_Click(object sender, EventArgs e)
         {
-            IOsuMemoryReader PioReader = OsuMemoryReader.Instance;
-            currOsuPath = $@"\{PioReader.GetOsuFileName()}";
+            IOsuMemoryReader pioReader = OsuMemoryReader.Instance;
+            currOsuPath = $@"\{pioReader.GetOsuFileName()}";
             if (currOsuPath == @"\")
             {
                 EditorReader editorReader = new EditorReader();
                 editorReader.FetchHOM();
                 editorReader.FetchBeatmap();
                 currOsuPath = $@"\{editorReader.Filename}";
-
             }
-            CurrOsuTxb.Text = currOsuPath;
 
+            CurrOsuTxb.Text = currOsuPath;
         }
 
         #endregion folder searches
@@ -279,20 +275,20 @@ namespace OsuCollabTool.UI
 
         private void BorderColSlecBtn_Click(object sender, EventArgs e)
         {
-            selectCol(BorderCol);
+            SelectCol(BorderCol);
         }
 
         private void BtnColSlecBtn_Click(object sender, EventArgs e)
         {
-            selectCol(BtnCol);
+            SelectCol(BtnCol);
         }
 
         private void BGColSlecBtn_Click(object sender, EventArgs e)
         {
-            selectCol(BGCol);
+            SelectCol(BGCol);
         }
 
-        private void selectCol(Control control)
+        private void SelectCol(Control control)
         {
             if (colorDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -306,38 +302,56 @@ namespace OsuCollabTool.UI
 
         private void SaveChangeBtn_Click(object sender, EventArgs e)
         {
-            UIDataOverwriter ow = new UIDataOverwriter();
-
-            //Folder setting
-            ow.setCurrFol(CurrFolTxb.Text);
-            ow.setSongFol(SongFolTxb.Text);
-            ow.setCurrOsu(CurrOsuTxb.Text);
-
-            //Theme
-            ow.setTheme(new Color[] {
-                Color.FromArgb(BorderCol.BackColor.R,BorderCol.BackColor.G,BorderCol.BackColor.B),
-                Color.FromArgb(BtnCol.BackColor.R,BtnCol.BackColor.G,BtnCol.BackColor.B),
-                Color.FromArgb(BGCol.BackColor.R,BGCol.BackColor.G,BGCol.BackColor.B)});
-
-            //Button Order
-            List<Button> buttons = DetectButtonOrder();
-            List<int> newOrder = new List<int>();
-            foreach (var item in buttons)
+            try
             {
-                newOrder.Add(item.TabIndex);
+                string[] files = Directory.GetFiles($@"{SongFolTxb.Text}{CurrFolTxb.Text}");
+                bool containsOsu = false;
+
+
+                foreach (string file in files)
+                {
+                    if (file.Contains(".osu"))
+                    {
+                        containsOsu = true;
+                    }
+                }
+
+                if (!containsOsu)
+                {
+                    throw new Exception("No .osu files were found, please input a viable directory.");
+                }
+
+                UIDataOverwriter ow = new UIDataOverwriter();
+
+                // Folder setting
+                ow.SetCurrFol(CurrFolTxb.Text);
+                ow.SetSongFol(SongFolTxb.Text);
+                ow.SetCurrOsu(CurrOsuTxb.Text);
+
+                // Theme
+                ow.SetTheme(new Color[]
+                {
+                Color.FromArgb(BorderCol.BackColor.R, BorderCol.BackColor.G, BorderCol.BackColor.B),
+                Color.FromArgb(BtnCol.BackColor.R, BtnCol.BackColor.G, BtnCol.BackColor.B),
+                Color.FromArgb(BGCol.BackColor.R, BGCol.BackColor.G, BGCol.BackColor.B)
+                });
+
+                // Button Order
+                List<Button> buttons = DetectbuttonOrder();
+                List<int> newOrder = new List<int>();
+                foreach (var item in buttons)
+                {
+                    newOrder.Add(item.TabIndex);
+                }
+
+                ow.SetButOrd(newOrder.ToArray());
+
+                ow.UpdateUIData();
             }
-            ow.setButOrd(newOrder.ToArray());
-
-            
-            
-            ow.UpdateUIData();
-
-            
-            
+            catch(Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            } 
         }
-
-        
-
-        
     }
 }

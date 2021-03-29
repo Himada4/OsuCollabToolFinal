@@ -6,113 +6,81 @@ namespace OsuCollabTool.UI
 {
     internal class UIDataOverwriter
     {
-        private string SongFolder;
-        private Color[] Theme;
-        private int[] ButtonOrder;
-        private string CurrentFolder;
-        private string CurrentOsu;
-        
+        private string songFolder;
+        private Color[] theme;
+        private int[] buttonOrder;
+        private string currentFolder;
+        private string currentOsu;
 
         public UIDataOverwriter()
         {
         }
 
-        public void setSongFol(string inp)
+        public void SetSongFol(string inp)
         {
-            SongFolder = inp;
+            songFolder = inp;
         }
 
-        public void setTheme(Color[] inp)
+        public void SetTheme(Color[] inp)
         {
-            Theme = inp;
+            theme = inp;
         }
 
-        public void setButOrd(int[] inp)
+        public void SetButOrd(int[] inp)
         {
-            ButtonOrder = inp;
+            buttonOrder = inp;
         }
 
-        public void setCurrFol(string inp)
+        public void SetCurrFol(string inp)
         {
-            CurrentFolder = inp;
+            currentFolder = inp;
         }
 
-        public void setCurrOsu(string inp)
+        public void SetCurrOsu(string inp)
         {
-            CurrentOsu = inp;
+            currentOsu = inp;
         }
 
-        
-
-        public void UpdateUIData() //https://www.youtube.com/watch?v=hs74fKPJpFw
+        public void UpdateUIData() // https://www.youtube.com/watch?v=hs74fKPJpFw
         {
+            // theme colors
+            List<int> red = new List<int>();
+            List<int> green = new List<int>();
+            List<int> blue = new List<int>();
 
-            //Theme
-            string ThemeFinal = "";
-            List<int> Red = new List<int>();
-            List<int> Green = new List<int>();
-            List<int> Blue = new List<int>();
-            
-
-            foreach (var item in Theme)
+            foreach (var item in theme)
             {
-                Red.Add(item.R);
-                Green.Add(item.G);
-                Blue.Add(item.B);
+                red.Add(item.R);
+                green.Add(item.G);
+                blue.Add(item.B);
             }
 
-            string Col1 = $"{Red[0]},{Green[0]},{Blue[0]}";
-            string Col2 = $"{Red[1]},{Green[1]},{Blue[1]}";
-            string Col3 = $"{Red[2]},{Green[2]},{Blue[2]}";
+            string col1 = $"{red[0]},{green[0]},{blue[0]}";
+            string col2 = $"{red[1]},{green[1]},{blue[1]}";
+            string col3 = $"{red[2]},{green[2]},{blue[2]}";
 
-            ThemeFinal = $"{Col1};{Col2};{Col3}";
+            string themeFinal = $"{col1};{col2};{col3}";
 
-
-            //ButtonOrder
-
-
+            // buttonOrder
             List<string> btnList = new List<string>();
-            for (int i = 0; i < ButtonOrder.Length; i = i + 1) 
+            for (int i = 0; i < buttonOrder.Length; i = i + 1)
             {
-                 
-                btnList.Add(ButtonOrder[i].ToString());
-                
-            } 
+                btnList.Add(buttonOrder[i].ToString());
+            }
 
             string btnOrdFinal = string.Join(",", btnList);
 
-
-
-            /*
-            StreamWriter sw = new StreamWriter("UIData.txt");
-            sw.WriteLine($"SongsFolder:{SongFolder}");
-            sw.WriteLine($"Theme:{ThemeFinal}");
-            sw.WriteLine($"ButtonOrder:{btnOrdFinal}");
-            sw.WriteLine($"CurrentFolder:{CurrentFolder}");
-            sw.WriteLine($"CurrentOsu:{CurrentOsu}");
-            sw.WriteLine($"Orientation:{Orientation}");
-            */
-
-            
-            using (StreamWriter sw = new StreamWriter("UIData.txt",false))
+            // Overwriting of UIData.txt
+            using (StreamWriter sw = new StreamWriter("UIData.txt", false))
             {
-                sw.WriteLine($"SongsFolder={SongFolder}");
-                sw.WriteLine($"Theme={ThemeFinal}");
+                sw.WriteLine($"SongsFolder={songFolder}");
+                sw.WriteLine($"Theme={themeFinal}");
                 sw.WriteLine($"ButtonOrder={btnOrdFinal}");
-                sw.WriteLine($"CurrentFolder={CurrentFolder}");
-                sw.WriteLine($"CurrentOsu={CurrentOsu}");
-                
+                sw.WriteLine($"CurrentFolder={currentFolder}");
+                sw.WriteLine($"CurrentOsu={currentOsu}");
+
                 sw.Close();
             }
-
-
-
-
         }
-
     }
 }
-
-
-
-

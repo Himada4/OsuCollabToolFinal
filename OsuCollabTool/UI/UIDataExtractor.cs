@@ -1,51 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 using System.IO;
 
 namespace OsuCollabTool.UI
 {
-    class UIDataExtractor
+    internal class UIDataExtractor
     {
-        string SongFolder;
-        Color[] Theme;
-        int[] ButtonOrder;
-        string CurrentFolder;
-        string CurrentOsu;
-        
+        private string songFolder;
+        private Color[] theme;
+        private int[] buttonOrder;
+        private string currentFolder;
+        private string currentOsu;
 
         public UIDataExtractor()
         {
-            refresh();
-        } 
-
-        public string getSongFol()
-        {
-            return SongFolder;
+            Refresh();
         }
 
-        public Color[] getTheme()
+        public string GetSongFol()
         {
-            return Theme;
+            return songFolder;
         }
-        public int[] getButOrd()
-        {
-            return ButtonOrder;
-        }
-        public string getCurrFol()
-        {
-            return CurrentFolder;
-        }
-        public string getCurrOsu()
-        {
-            return CurrentOsu;
-        }
-        
 
-        public void refresh()
+        public Color[] GetTheme()
+        {
+            return theme;
+        }
+
+        public int[] GetButOrd()
+        {
+            return buttonOrder;
+        }
+
+        public string GetCurrFol()
+        {
+            return currentFolder;
+        }
+
+        public string GetCurrOsu()
+        {
+            return currentOsu;
+        }
+
+        public void Refresh()
         {
             StreamReader sr = new StreamReader("UIData.txt");
             var line = sr.ReadLine();
@@ -54,13 +52,13 @@ namespace OsuCollabTool.UI
             int i = 0;
             while (line != null)
             {
-                
                 switch (i)
                 {
                     case 0:
                         string[] son = line.Split('=');
-                        SongFolder = son[itemData];
+                        songFolder = son[itemData];
                         break;
+
                     case 1:
                         string[] the = line.Split('=');
                         string main = the[itemData];
@@ -74,24 +72,27 @@ namespace OsuCollabTool.UI
                             sonRes[j] = col;
                         }
 
-                        Theme = sonRes;
+                        theme = sonRes;
                         break;
+
                     case 2:
                         string[] but = line.Split('=');
                         string split = but[itemData];
                         string[] butRes = split.Split(',');
-                        ButtonOrder = new int[] { Convert.ToInt32(butRes[0]), Convert.ToInt32(butRes[1]), Convert.ToInt32(butRes[2]), Convert.ToInt32(butRes[3]) };
+                        buttonOrder = new int[] { Convert.ToInt32(butRes[0]), Convert.ToInt32(butRes[1]), Convert.ToInt32(butRes[2]), Convert.ToInt32(butRes[3]) };
                         break;
+
                     case 3:
                         string[] fold = line.Split('=');
-                        CurrentFolder = fold[itemData];
+                        currentFolder = fold[itemData];
                         break;
+
                     case 4:
                         string[] osu = line.Split('=');
-                        CurrentOsu = osu[itemData];
+                        currentOsu = osu[itemData];
                         break;
-                    
                 }
+
                 i = i + 1;
                 list.Add(line);
                 line = sr.ReadLine();
@@ -99,6 +100,5 @@ namespace OsuCollabTool.UI
 
             sr.Close();
         }
-
     }
 }
