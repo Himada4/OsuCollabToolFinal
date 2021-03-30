@@ -143,7 +143,7 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
             timingPoints.RemoveAt(timingPoints.Count - 1);
 
             hitObjects.RemoveAt(0);
-            hitObjects.RemoveAt(hitObjects.Count - 1);
+            // hitObjects.RemoveAt(hitObjects.Count - 1);
             Queue<string> uninheritedPoints = GetUP(timingPoints);
 
             List<string> seperatedTimingPoints = new List<string>();
@@ -152,7 +152,11 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
             foreach (var timingPoint in timingPoints)
             {
                 string[] split = timingPoint.Split(',');
-                string uPLine = uninheritedPoints.Peek();
+                string uPLine = string.Empty;
+                if(uninheritedPoints.Count != 0)
+                {
+                    uPLine = uninheritedPoints.Peek();
+                }
                 if ((Convert.ToInt32(split[0]) >= start && Convert.ToInt32(split[0]) <= end && Convert.ToDecimal(split[1]) < 0) || timingPoint == uPLine)
                 {
                     seperatedTimingPoints.Add(timingPoint);

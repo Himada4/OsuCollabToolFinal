@@ -101,6 +101,7 @@
             this.UntilTrackBar.Name = "UntilTrackBar";
             this.UntilTrackBar.Size = new System.Drawing.Size(706, 45);
             this.UntilTrackBar.TabIndex = 1;
+            this.UntilTrackBar.TickFrequency = 60000;
             // 
             // StartTrackBar
             // 
@@ -108,6 +109,7 @@
             this.StartTrackBar.Name = "StartTrackBar";
             this.StartTrackBar.Size = new System.Drawing.Size(706, 45);
             this.StartTrackBar.TabIndex = 0;
+            this.StartTrackBar.TickFrequency = 60000;
             // 
             // l2
             // 
