@@ -240,33 +240,46 @@ namespace OsuCollabTool.UI
 
         private void LiveScanFol_Click(object sender, EventArgs e)
         {
-            IOsuMemoryReader pioReader = OsuMemoryReader.Instance;
-            currFolPath = $@"\{pioReader.GetMapFolderName()}";
-
-            if (currFolPath == @"\")
+            try
             {
-                EditorReader editorReader = new EditorReader();
-                editorReader.FetchHOM();
-                editorReader.FetchBeatmap();
-                currFolPath = $@"\{editorReader.ContainingFolder}";
-            }
+                IOsuMemoryReader pioReader = OsuMemoryReader.Instance;
+                currFolPath = $@"\{pioReader.GetMapFolderName()}";
 
-            CurrFolTxb.Text = currFolPath;
+                if (currFolPath == @"\")
+                {
+                    EditorReader editorReader = new EditorReader();
+                    editorReader.FetchHOM();
+                    editorReader.FetchBeatmap();
+                    currFolPath = $@"\{editorReader.ContainingFolder}";
+                }
+
+                CurrFolTxb.Text = currFolPath;
+            }catch(Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
         }
 
         private void LiveScanOsu_Click(object sender, EventArgs e)
         {
-            IOsuMemoryReader pioReader = OsuMemoryReader.Instance;
-            currOsuPath = $@"\{pioReader.GetOsuFileName()}";
-            if (currOsuPath == @"\")
+            try
             {
-                EditorReader editorReader = new EditorReader();
-                editorReader.FetchHOM();
-                editorReader.FetchBeatmap();
-                currOsuPath = $@"\{editorReader.Filename}";
-            }
+                IOsuMemoryReader pioReader = OsuMemoryReader.Instance;
+                currOsuPath = $@"\{pioReader.GetOsuFileName()}";
+                if (currOsuPath == @"\")
+                {
+                    EditorReader editorReader = new EditorReader();
+                    editorReader.FetchHOM();
+                    editorReader.FetchBeatmap();
+                    currOsuPath = $@"\{editorReader.Filename}";
+                }
 
-            CurrOsuTxb.Text = currOsuPath;
+                CurrOsuTxb.Text = currOsuPath;
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
         }
 
         #endregion folder searches
