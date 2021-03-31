@@ -134,6 +134,7 @@ namespace OsuCollabTool
 
             // Song Stetup
             ToolStripMenuItem songSetup = new ToolStripMenuItem();
+            songSetup.Click += (s, e) => { RefreshUI(); };
             songSetup.Text = "SongSetup";
 
             // Map Setup
@@ -151,6 +152,7 @@ namespace OsuCollabTool
 
             // Merger https://stackoverflow.com/questions/6187944/how-can-i-create-a-dynamic-button-click-event-on-a-dynamic-button
             ToolStripMenuItem merger = new ToolStripMenuItem();
+            merger.Click += (s, e) => { RefreshUI(); };
             merger.Text = "Merger";
 
             // Merge
@@ -174,6 +176,7 @@ namespace OsuCollabTool
 
             // Hitsounding
             ToolStripMenuItem hitsounding = new ToolStripMenuItem();
+            hitsounding.Click += (s, e) => { RefreshUI(); };
             hitsounding.Text = "Hitsounding";
 
             // Volume Tool
@@ -191,6 +194,7 @@ namespace OsuCollabTool
 
             // Mapping
             ToolStripMenuItem mapping = new ToolStripMenuItem();
+            mapping.Click += (s, e) => { RefreshUI(); };
             mapping.Text = "Mapping";
 
             // Slider Bank
