@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Windows.Forms;
-using OsuCollabTool.Main_Classes;
+﻿using OsuCollabTool.Main_Classes;
 using OsuCollabTool.Main_Classes.HitsoundingFunc;
 using OsuCollabTool.Main_Classes.MappingFunc;
 using OsuCollabTool.Main_Classes.MergerFunc;
 using OsuCollabTool.Main_Classes.SongSetupFunc;
 using OsuCollabTool.UI;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Reflection;
+using System.Windows.Forms;
 
 namespace OsuCollabTool
 {
@@ -79,7 +80,7 @@ namespace OsuCollabTool
             // Makes sure directory is viable
             if (string.IsNullOrEmpty(songFolder) ||
                 string.IsNullOrEmpty(currentFolder) ||
-                string.IsNullOrEmpty(currentOsu)) 
+                string.IsNullOrEmpty(currentOsu))
             {
                 MessageBox.Show("Please make sure to input the directories in Preferences!");
             }
@@ -92,7 +93,7 @@ namespace OsuCollabTool
                 // Looks for every .osu files in the folder used to backup
                 foreach (string file in files)
                 {
-                    if (file.Contains(".osu")) 
+                    if (file.Contains(".osu"))
                     {
                         mapset.Add($@"{songFolder}{currentFolder}\{Path.GetFileName(file)}");
                     }
@@ -109,6 +110,39 @@ namespace OsuCollabTool
 
         private void RefreshUI() // Updates the UI to the preferences.txt
         {
+            string[] libraries = Directory.GetFiles($@"{Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)}");
+            List<string> check = new List<string>() { "EditorReader.dll", "Microsoft.Win32.Registry.dll", "Microsoft.Win32.Registry.xml", "NAudio.Asio.dll", "NAudio.Core.dll", "NAudio.dll", "NAudio.Midi.dll", "NAudio.Wasapi.dll", "NAudio.WinForms.dll", "NAudio.WinMM.dll", "NAudio.xml", "OsuCollabTool.exe.config", "OsuCollabTool.pdb", "OsuMemoryDataProvider.dll", "ProcessMemoryDataFinder.dll", "System.Security.AccessControl.dll", "System.Security.AccessControl.xml", "System.Security.Principal.Windows.dll", "System.Security.Principal.Windows.xml" };
+
+            List<int> ind = new List<int>();
+            foreach (var library in libraries)
+            {
+                for (int i = 0; i < check.Count; i = i + 1)
+                {
+                    if (check[i] == Path.GetFileName(library))
+                    {
+                        ind.Add(i);
+                        break;
+                    }
+                }
+            }
+
+            for (int i = ind.Count-1; i >= 0; i = i - 1)
+            {
+                check.RemoveAt(i);
+            }
+
+            string missingFiles = string.Empty;
+
+            foreach (var fileMissing in check)
+            {
+                missingFiles = $"{missingFiles}{Environment.NewLine}{fileMissing}";
+            }
+            if (check.Count != 0)
+            {
+                MessageBox.Show($"An error has occured, one or several libraries are missing, please re-install this program. {Environment.NewLine} Missing file(s): {missingFiles}");
+                Environment.Exit(0);
+            }
+
             string dirNull = "Please make sure to input the directories in Preferences!";
 
             // Gets map directory and UI information
@@ -236,7 +270,6 @@ namespace OsuCollabTool
                     volumeTool.Enabled = false;
                     seperate.Enabled = false;
                     bpmDetector.Enabled = false;
-
                 }
             }
 
@@ -291,7 +324,8 @@ namespace OsuCollabTool
                 MainIntBG.Controls.Add(childForm);
                 MainIntBG.Tag = childForm;
                 childForm.Show();
-            }catch(Exception exc)
+            }
+            catch (Exception exc)
             {
                 MessageBox.Show("There was a problem opening the file, reason: " + exc.Message);
                 RefreshUI();
