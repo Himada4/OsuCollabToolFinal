@@ -108,8 +108,12 @@ namespace OsuCollabTool
             }
         }
 
+        public static List<ToolStripMenuItem> category;
+        public static List<ToolStripMenuItem> audioFeatures;
+
         private void RefreshUI() // Updates the UI to the preferences.txt
         {
+            // Checks if any libraries are missing
             string[] libraries = Directory.GetFiles($@"{Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)}");
             List<string> check = new List<string>() { "EditorReader.dll", "Microsoft.Win32.Registry.dll", "Microsoft.Win32.Registry.xml", "NAudio.Asio.dll", "NAudio.Core.dll", "NAudio.dll", "NAudio.Midi.dll", "NAudio.Wasapi.dll", "NAudio.WinForms.dll", "NAudio.WinMM.dll", "NAudio.xml", "OsuCollabTool.exe.config", "OsuCollabTool.pdb", "OsuMemoryDataProvider.dll", "ProcessMemoryDataFinder.dll", "System.Security.AccessControl.dll", "System.Security.AccessControl.xml", "System.Security.Principal.Windows.dll", "System.Security.Principal.Windows.xml" };
 
@@ -126,7 +130,7 @@ namespace OsuCollabTool
                 }
             }
 
-            for (int i = ind.Count-1; i >= 0; i = i - 1)
+            for (int i = ind.Count - 1; i >= 0; i = i - 1)
             {
                 check.RemoveAt(i);
             }
@@ -143,8 +147,7 @@ namespace OsuCollabTool
                 Environment.Exit(0);
             }
 
-            string dirNull = "Please make sure to input the directories in Preferences!";
-
+            // Makes sure all directories and settings are viable
             // Gets map directory and UI information
             UIDataExtractor ext = new UIDataExtractor();
             ext.Refresh();
@@ -168,7 +171,7 @@ namespace OsuCollabTool
 
             // Song Stetup
             ToolStripMenuItem songSetup = new ToolStripMenuItem();
-            songSetup.Click += (s, e) => { RefreshUI(); };
+            songSetup.Click += (s, e) => { CheckAudioMenuEnablility($"{songFolder}{currentFolder}{currentOsu}"); };
             songSetup.Text = "SongSetup";
 
             // Map Setup
@@ -186,7 +189,7 @@ namespace OsuCollabTool
 
             // Merger https://stackoverflow.com/questions/6187944/how-can-i-create-a-dynamic-button-click-event-on-a-dynamic-button
             ToolStripMenuItem merger = new ToolStripMenuItem();
-            merger.Click += (s, e) => { RefreshUI(); };
+            merger.Click += (s, e) => { CheckAudioMenuEnablility($"{songFolder}{currentFolder}{currentOsu}"); };
             merger.Text = "Merger";
 
             // Merge
@@ -210,7 +213,7 @@ namespace OsuCollabTool
 
             // Hitsounding
             ToolStripMenuItem hitsounding = new ToolStripMenuItem();
-            hitsounding.Click += (s, e) => { RefreshUI(); };
+            hitsounding.Click += (s, e) => { CheckAudioMenuEnablility($"{songFolder}{currentFolder}{currentOsu}"); };
             hitsounding.Text = "Hitsounding";
 
             // Volume Tool
@@ -228,7 +231,7 @@ namespace OsuCollabTool
 
             // Mapping
             ToolStripMenuItem mapping = new ToolStripMenuItem();
-            mapping.Click += (s, e) => { RefreshUI(); };
+            mapping.Click += (s, e) => { CheckAudioMenuEnablility($"{songFolder}{currentFolder}{currentOsu}"); };
             mapping.Text = "Mapping";
 
             // Slider Bank
@@ -238,47 +241,26 @@ namespace OsuCollabTool
             mapping.DropDownItems.Add(sliderBank);
             //// -----
 
+            category = new List<ToolStripMenuItem>() { songSetup, merger, hitsounding, mapping };
+            audioFeatures = new List<ToolStripMenuItem>() { hitObjectTool, volumeTool, seperate, bpmDetector };
+
             // Disables the toolstripmenu if the directories are null
-            if (string.IsNullOrEmpty(songFolder) ||
-                string.IsNullOrEmpty(currentFolder) ||
-                string.IsNullOrEmpty(currentOsu))
+            if (string.IsNullOrEmpty(songFolder) || string.IsNullOrEmpty(currentFolder) || string.IsNullOrEmpty(currentOsu))
             {
-                songSetup.Enabled = false;
-                merger.Enabled = false;
-                hitsounding.Enabled = false;
-                mapping.Enabled = false;
-            }
-            else
-            {
-                // Checks if the mapset has a audio
-                string[] files = Directory.GetFiles($@"{songFolder}{currentFolder}");
-                bool hasAudio = false;
-
-                foreach (string file in files)
+                foreach (var control in category)
                 {
-                    if (file.Contains(".mp3") || file.Contains(".ogg") || file.Contains(".wav"))
-                    {
-                        hasAudio = true;
-                    }
-                }
-
-                if (!hasAudio)
-                {
-                    MessageBox.Show("No audio file detected, disabling features that involves audio analysis");
-
-                    hitObjectTool.Enabled = false;
-                    volumeTool.Enabled = false;
-                    seperate.Enabled = false;
-                    bpmDetector.Enabled = false;
+                    control.Enabled = false;
                 }
             }
+
+            CheckAudioMenuEnablility($"{songFolder}{currentFolder}{currentOsu}");
 
             // Shows err dialogue when using the program for the first time
             MainScrMenu.MouseEnter += (s, e) =>
             {
                 if (dirNullCount == 0 && (string.IsNullOrEmpty(songFolder) || string.IsNullOrEmpty(currentFolder) || string.IsNullOrEmpty(currentOsu)))
                 {
-                    MessageBox.Show(dirNull);
+                    MessageBox.Show(ExceptionsHandling.dirNull.Message);
                     dirNullCount = dirNullCount + 1;
                 }
             };
@@ -329,6 +311,31 @@ namespace OsuCollabTool
             {
                 MessageBox.Show("There was a problem opening the file, reason: " + exc.Message);
                 RefreshUI();
+            }
+        }
+
+        private void CheckAudioMenuEnablility(string fullPathDir)
+        {
+            // Checks if the mapset has a audio
+            string[] files = Directory.GetFiles($@"{Path.GetDirectoryName(fullPathDir)}");
+            bool hasAudio = false;
+
+            foreach (string file in files)
+            {
+                if (file.Contains(".mp3") || file.Contains(".ogg") || file.Contains(".wav"))
+                {
+                    hasAudio = true;
+                }
+            }
+
+            if (!hasAudio)
+            {
+                MessageBox.Show("No audio file detected, disabling features that involves audio analysis");
+
+                foreach (var control in audioFeatures)
+                {
+                    control.Enabled = false;
+                }
             }
         }
 
