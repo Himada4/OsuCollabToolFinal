@@ -316,26 +316,33 @@ namespace OsuCollabTool
 
         private void CheckAudioMenuEnablility(string fullPathDir)
         {
-            // Checks if the mapset has a audio
-            string[] files = Directory.GetFiles($@"{Path.GetDirectoryName(fullPathDir)}");
-            bool hasAudio = false;
-
-            foreach (string file in files)
+            try
             {
-                if (file.Contains(".mp3") || file.Contains(".ogg") || file.Contains(".wav"))
+                // Checks if the mapset has a audio
+                string[] files = Directory.GetFiles($@"{Path.GetDirectoryName(fullPathDir)}");
+                bool hasAudio = false;
+
+                foreach (string file in files)
                 {
-                    hasAudio = true;
+                    if (file.Contains(".mp3") || file.Contains(".ogg") || file.Contains(".wav"))
+                    {
+                        hasAudio = true;
+                    }
+                }
+
+                if (!hasAudio)
+                {
+                    MessageBox.Show("No audio file detected, disabling features that involves audio analysis");
+
+                    foreach (var control in audioFeatures)
+                    {
+                        control.Enabled = false;
+                    }
                 }
             }
-
-            if (!hasAudio)
+            catch
             {
-                MessageBox.Show("No audio file detected, disabling features that involves audio analysis");
-
-                foreach (var control in audioFeatures)
-                {
-                    control.Enabled = false;
-                }
+                // Do nothing
             }
         }
 
