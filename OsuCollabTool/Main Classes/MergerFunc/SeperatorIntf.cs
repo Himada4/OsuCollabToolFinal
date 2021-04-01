@@ -18,28 +18,28 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
         public SeperatorIntf()
         {
             InitializeComponent();
-
-            UIDataExtractor ext = new UIDataExtractor();
-            string[] files = Directory.GetFiles($@"{ext.GetSongFol()}{ext.GetCurrFol()}");
-
-            // Theme
-            Color[] theme = ext.GetTheme();
-            Common.SetBGCol(theme[2], BtmBG, MainBG);
-            Common.SetBtnCol(theme[1], SeperateBtn);
-            Common.ContrastColor(theme[1], SeperateBtn);
-            Common.ContrastColor(theme[2], l1, l2, l3, l4, l5, l6, l7, MaxDurStart, MaxDurUntil);
-            dir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}\{ext.GetCurrOsu()}";
-            string audioDir = string.Empty;
-
-            foreach (string file in files)
-            {
-                if (file.Contains(".mp3"))
-                {
-                    audioDir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}\{Path.GetFileName(file)}";
-                }
-            }
             try
             {
+                UIDataExtractor ext = new UIDataExtractor();
+                string[] files = Directory.GetFiles($@"{ext.GetSongFol()}{ext.GetCurrFol()}");
+
+                // Theme
+                Color[] theme = ext.GetTheme();
+                Common.SetBGCol(theme[2], BtmBG, MainBG);
+                Common.SetBtnCol(theme[1], SeperateBtn);
+                Common.ContrastColor(theme[1], SeperateBtn);
+                Common.ContrastColor(theme[2], l1, l2, l3, l4, l5, l6, l7, MaxDurStart, MaxDurUntil);
+                dir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}\{ext.GetCurrOsu()}";
+                string audioDir = string.Empty;
+
+                foreach (string file in files)
+                {
+                    if (file.Contains(".mp3"))
+                    {
+                        audioDir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}\{Path.GetFileName(file)}";
+                    }
+                }
+
                 AudioFileReader duration = new AudioFileReader(audioDir);
                 TimeSpan durationInt = duration.TotalTime;
                 totalTime = (int)durationInt.TotalMilliseconds;
@@ -97,32 +97,39 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
         // Triggers a process to check for errors before executing the actual process
         private async void SeperateBtn_Click(object sender, EventArgs e)
         {
-            if (SeperateFromTb.Text == string.Empty || UntilTb.Text == string.Empty)
+            try
             {
-                MessageBox.Show(ExceptionsHandling.invalidInput.Message);
-            }
-            else if (Convert.ToInt32(SeperateFromTb.Text) > Convert.ToInt32(UntilTb.Text))
-            {
-                MessageBox.Show(ExceptionsHandling.invalidInput.Message);
-            }
-            else
-            {
-                SeperateBtn.Text = "Processing...";
-                Exception exc = await Task.Run(StartSeperation);
-
-                if (exc == null)
+                if (SeperateFromTb.Text == string.Empty || UntilTb.Text == string.Empty)
                 {
-                    SeperateBtn.Text = "Complete!";
-                    MessageBox.Show("Seperation has been completed successfully, a new file has been created!");
-
-                    SeperateBtn.Text = "Seperate Part";
+                    MessageBox.Show(ExceptionsHandling.invalidInput.Message);
+                }
+                else if (Convert.ToInt32(SeperateFromTb.Text) > Convert.ToInt32(UntilTb.Text))
+                {
+                    MessageBox.Show(ExceptionsHandling.invalidInput.Message);
                 }
                 else
                 {
-                    SeperateBtn.Text = "Error";
-                    MessageBox.Show(exc.Message);
-                    SeperateBtn.Text = "Seperate Part";
+                    SeperateBtn.Text = "Processing...";
+                    Exception exc = await Task.Run(StartSeperation);
+
+                    if (exc == null)
+                    {
+                        SeperateBtn.Text = "Complete!";
+                        MessageBox.Show("Seperation has been completed successfully, a new file has been created!");
+
+                        SeperateBtn.Text = "Seperate Part";
+                    }
+                    else
+                    {
+                        SeperateBtn.Text = "Error";
+                        MessageBox.Show(exc.Message);
+                        SeperateBtn.Text = "Seperate Part";
+                    }
                 }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
             }
         }
 
@@ -153,7 +160,7 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
             {
                 string[] split = timingPoint.Split(',');
                 string uPLine = string.Empty;
-                if(uninheritedPoints.Count != 0)
+                if (uninheritedPoints.Count != 0)
                 {
                     uPLine = uninheritedPoints.Peek();
                 }

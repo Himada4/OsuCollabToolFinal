@@ -1,16 +1,13 @@
-﻿using System;
+﻿using OsuCollabTool.CoreClasses;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Drawing;
-using OsuCollabTool.CoreClasses;
 using System.IO;
+using System.Windows.Forms;
 
 namespace OsuCollabTool.Main_Classes
 {
-    class Common
+    internal class Common
     {
         public static void SetBtnCol(Color color, params Button[] buttons)
         {
@@ -32,7 +29,7 @@ namespace OsuCollabTool.Main_Classes
         {
             int d = 0;
 
-            // Counting the perceptive luminance - human eye favors green color... 
+            // Counting the perceptive luminance - human eye favors green color...
             double luminance = (0.299 * color.R + 0.587 * color.G + 0.114 * color.B) / 255;
 
             if (luminance > 0.5)
@@ -43,19 +40,18 @@ namespace OsuCollabTool.Main_Classes
             foreach (var control in controls)
             {
                 control.ForeColor = Color.FromArgb(d, d, d);
-            } 
+            }
         }
 
         public static Form ReloadChildform(Form childForm, Form newChildForm, Control parentContainer)
         {
-
             childForm.Close();
             newChildForm.TopLevel = false;
             newChildForm.FormBorderStyle = FormBorderStyle.None;
             newChildForm.Dock = DockStyle.Fill;
             parentContainer.Controls.Add(newChildForm);
             parentContainer.Tag = newChildForm;
-            
+
             newChildForm.Show();
 
             return newChildForm;
@@ -63,8 +59,6 @@ namespace OsuCollabTool.Main_Classes
 
         public static void ReplaceFileWithNewData(string Dir, int SectionToReplace, List<string> newInput)
         {
-            
-
             MapDataExtractor Data = new MapDataExtractor(Dir);
 
             List<string> General = Data.GetGeneralString();
@@ -81,24 +75,31 @@ namespace OsuCollabTool.Main_Classes
                 case 1:
                     General = newInput;
                     break;
+
                 case 2:
                     Editor = newInput;
                     break;
+
                 case 3:
                     Metadata = newInput;
                     break;
+
                 case 4:
                     Difficulty = newInput;
                     break;
+
                 case 5:
                     Events = newInput;
                     break;
+
                 case 6:
                     TimingPoints = newInput;
                     break;
+
                 case 7:
                     Colours = newInput;
                     break;
+
                 case 8:
                     HitObjects = newInput;
                     break;
@@ -141,9 +142,6 @@ namespace OsuCollabTool.Main_Classes
 
                 sw.Close();
             }
-
-        } 
-
-
+        }
     }
 }

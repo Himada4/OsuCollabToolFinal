@@ -17,29 +17,37 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
         public MergeIntf()
         {
             InitializeComponent();
-
-            FromFolder.Items.Clear();
-
-            UIDataExtractor ext = new UIDataExtractor();
-            Color[] theme = ext.GetTheme();
-            Common.SetBtnCol(theme[1], MergeButton);
-            Common.SetBGCol(theme[2], t1, t2, t3, t4);
-            Common.ContrastColor(theme[1], MergeButton);
-            Common.ContrastColor(theme[2], l1, l2);
-            string[] files = Directory.GetFiles($@"{ext.GetSongFol()}{ext.GetCurrFol()}");
-            dir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}";
-
-            foreach (string file in files)
+            try
             {
-                if (file.Contains(".osu"))
+                FromFolder.Items.Clear();
+
+                UIDataExtractor ext = new UIDataExtractor();
+                Color[] theme = ext.GetTheme();
+                Common.SetBtnCol(theme[1], MergeButton);
+                Common.SetBGCol(theme[2], t1, t2, t3, t4);
+                Common.ContrastColor(theme[1], MergeButton);
+                Common.ContrastColor(theme[2], l1, l2);
+                string[] files = Directory.GetFiles($@"{ext.GetSongFol()}{ext.GetCurrFol()}");
+                dir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}";
+
+                foreach (string file in files)
                 {
-                    FromFolder.Items.Add(Path.GetFileName(file));
+                    if (file.Contains(".osu"))
+                    {
+                        FromFolder.Items.Add(Path.GetFileName(file));
+                    }
                 }
+            }
+            catch
+            {
+                this.Close();
             }
         }
 
         // This region is used for selecting items via drag drop
+
         #region Drag Drop
+
         private void FromFolder_MouseDown(object sender, MouseEventArgs e)
         {
             try
@@ -90,26 +98,34 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
                 }
             }
         }
-        #endregion
+
+        #endregion Drag Drop
 
         // Trigger before the proccess starts, invokes a thread
         private async void MergeButton_Click(object sender, EventArgs e)
         {
-            MergeButton.Text = "Processing...";
-            Exception exc = await Task.Run(CheckBeforeMerge);
-
-            if (exc == null)
+            try
             {
-                MergeButton.Text = "Complete!";
-                MessageBox.Show("Merging has been completed successfully!");
+                MergeButton.Text = "Processing...";
+                Exception exc = await Task.Run(CheckBeforeMerge);
 
-                MergeButton.Text = "Merge!";
+                if (exc == null)
+                {
+                    MergeButton.Text = "Complete!";
+                    MessageBox.Show("Merging has been completed successfully!");
+
+                    MergeButton.Text = "Merge!";
+                }
+                else
+                {
+                    MergeButton.Text = "Error";
+                    MessageBox.Show(exc.Message);
+                    MergeButton.Text = "Merge!";
+                }
             }
-            else
+            catch (Exception exc)
             {
-                MergeButton.Text = "Error";
                 MessageBox.Show(exc.Message);
-                MergeButton.Text = "Merge!";
             }
         }
 
@@ -180,7 +196,7 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
                     return exc;
                 }
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 return exc;
             }
@@ -274,7 +290,7 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
             int i = 1;
 
             // https://stackoverflow.com/questions/5270919/always-create-new-file-if-file-already-exists-with-same-location-in-c-sharp
-            while (File.Exists($"{dir}/{fileName}.osu")) 
+            while (File.Exists($"{dir}/{fileName}.osu"))
             {
                 i = i + 1;
                 fileName = $"{baseFileName}({i})";
@@ -306,7 +322,9 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
         }
 
         // Uses a quick sort to sort the merged list on the offset
+
         #region quick sort
+
         private static void Sort(List<string> input, bool isItTimingPoint, int lo, int hi) // https://en.wikipedia.org/wiki/Quicksort
         {
             if (lo < hi)
@@ -356,6 +374,7 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
 
             return offset;
         }
-        #endregion
+
+        #endregion quick sort
     }
 }

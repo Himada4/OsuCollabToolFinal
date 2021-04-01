@@ -17,23 +17,30 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
         public CompareIntf()
         {
             InitializeComponent();
-            FromFolder.Items.Clear();
-
-            UIDataExtractor ext = new UIDataExtractor();
-            Color[] theme = ext.GetTheme();
-            Common.SetBtnCol(theme[1], CompareButton);
-            Common.SetBGCol(theme[2], t1, t2, t3, t4);
-            Common.ContrastColor(theme[1], CompareButton);
-            Common.ContrastColor(theme[2], l1, l2);
-            string[] files = Directory.GetFiles($@"{ext.GetSongFol()}{ext.GetCurrFol()}");
-            dir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}";
-
-            foreach (string file in files)
+            try
             {
-                if (file.Contains(".osu"))
+                FromFolder.Items.Clear();
+
+                UIDataExtractor ext = new UIDataExtractor();
+                Color[] theme = ext.GetTheme();
+                Common.SetBtnCol(theme[1], CompareButton);
+                Common.SetBGCol(theme[2], t1, t2, t3, t4);
+                Common.ContrastColor(theme[1], CompareButton);
+                Common.ContrastColor(theme[2], l1, l2);
+                string[] files = Directory.GetFiles($@"{ext.GetSongFol()}{ext.GetCurrFol()}");
+                dir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}";
+
+                foreach (string file in files)
                 {
-                    FromFolder.Items.Add(Path.GetFileName(file));
+                    if (file.Contains(".osu"))
+                    {
+                        FromFolder.Items.Add(Path.GetFileName(file));
+                    }
                 }
+            }
+            catch
+            {
+                this.Close();
             }
         }
 
@@ -97,14 +104,21 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
         // Triggers the proccess for the comparison, but first only checks for errors
         private async void CompareButton_Click(object sender, EventArgs e)
         {
-            CompareButton.Text = "Processing...";
-            Exception exc = await Task.Run(StartCompare);
-
-            if (exc != null)
+            try
             {
-                CompareButton.Text = "Error";
+                CompareButton.Text = "Processing...";
+                Exception exc = await Task.Run(StartCompare);
+
+                if (exc != null)
+                {
+                    CompareButton.Text = "Error";
+                    MessageBox.Show(exc.Message);
+                    CompareButton.Text = "Compare!";
+                }
+            }
+            catch(Exception exc)
+            {
                 MessageBox.Show(exc.Message);
-                CompareButton.Text = "Compare!";
             }
         }
 

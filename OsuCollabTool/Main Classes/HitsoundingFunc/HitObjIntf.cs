@@ -1,13 +1,13 @@
-﻿using System;
+﻿using NAudio.Wave;
+using OsuCollabTool.CoreClasses;
+using OsuCollabTool.UI;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NAudio.Wave;
-using OsuCollabTool.CoreClasses;
-using OsuCollabTool.UI;
 
 namespace OsuCollabTool.Main_Classes.HitsoundingFunc
 {
@@ -18,29 +18,28 @@ namespace OsuCollabTool.Main_Classes.HitsoundingFunc
         public HitObjIntf()
         {
             InitializeComponent();
-
-            UIDataExtractor ext = new UIDataExtractor();
-            string[] files = Directory.GetFiles($@"{ext.GetSongFol()}{ext.GetCurrFol()}");
-
-            // theme
-            Color[] theme = ext.GetTheme();
-            Common.SetBGCol(theme[2], BG1, BG2);
-            Common.SetBtnCol(theme[1], ChangeHS);
-            Common.ContrastColor(theme[1], ChangeHS);
-            Common.ContrastColor(theme[2], SelectSamplesetBox, Selector, changeWhistle, changeFinish, changeClap, Option1, Option2, Option3, ChangesBox, changeHitCircles, changeSpinners, changeSliderEnds, changeSliderHeads, SelectTimestampBox, MaxDurStart, MaxDurUntil, UntilTb, SelectFromTb, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15);
-            dir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}\{ext.GetCurrOsu()}";
-            string audioDir = String.Empty;
-
-            foreach (string file in files)
-            {
-                if (file.Contains(".mp3"))
-                {
-                    audioDir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}\{Path.GetFileName(file)}";
-                }
-            }
-
             try
             {
+                UIDataExtractor ext = new UIDataExtractor();
+                string[] files = Directory.GetFiles($@"{ext.GetSongFol()}{ext.GetCurrFol()}");
+
+                // theme
+                Color[] theme = ext.GetTheme();
+                Common.SetBGCol(theme[2], BG1, BG2);
+                Common.SetBtnCol(theme[1], ChangeHS);
+                Common.ContrastColor(theme[1], ChangeHS);
+                Common.ContrastColor(theme[2], SelectSamplesetBox, Selector, changeWhistle, changeFinish, changeClap, Option1, Option2, Option3, ChangesBox, changeHitCircles, changeSpinners, changeSliderEnds, changeSliderHeads, SelectTimestampBox, MaxDurStart, MaxDurUntil, UntilTb, SelectFromTb, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15);
+                dir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}\{ext.GetCurrOsu()}";
+                string audioDir = String.Empty;
+
+                foreach (string file in files)
+                {
+                    if (file.Contains(".mp3"))
+                    {
+                        audioDir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}\{Path.GetFileName(file)}";
+                    }
+                }
+
                 AudioFileReader duration = new AudioFileReader(audioDir);
                 TimeSpan durationInt = duration.TotalTime;
                 int totalTime = (int)durationInt.TotalMilliseconds;
@@ -157,7 +156,8 @@ namespace OsuCollabTool.Main_Classes.HitsoundingFunc
 
             return offset;
         }
-        #endregion
+
+        #endregion Track Bar related Operations
 
         #region Main operation
 
@@ -215,6 +215,7 @@ namespace OsuCollabTool.Main_Classes.HitsoundingFunc
         {
             try
             {
+                
                 if (!Option1.Checked && !Option2.Checked && !Option3.Checked)
                 {
                     throw ExceptionsHandling.selectedNone;
@@ -322,7 +323,7 @@ namespace OsuCollabTool.Main_Classes.HitsoundingFunc
                         ChangeHS.Text = "Error";
                         MessageBox.Show(exc.Message);
                         ChangeHS.Text = "Make Changes!";
-                    } 
+                    }
                 }
             }
             catch (Exception exc)
@@ -405,7 +406,8 @@ namespace OsuCollabTool.Main_Classes.HitsoundingFunc
                 Common.ReplaceFileWithNewData(dir, 8, result);
 
                 return exc;
-            }catch(Exception exc)
+            }
+            catch (Exception exc)
             {
                 return exc;
             }
@@ -584,7 +586,7 @@ namespace OsuCollabTool.Main_Classes.HitsoundingFunc
 
                 return exc;
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 return exc;
             }
@@ -1172,6 +1174,6 @@ namespace OsuCollabTool.Main_Classes.HitsoundingFunc
             return result;
         }
 
-        #endregion
+        #endregion Main operation
     }
 }

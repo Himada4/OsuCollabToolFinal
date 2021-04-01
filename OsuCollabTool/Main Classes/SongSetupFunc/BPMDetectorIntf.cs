@@ -18,26 +18,26 @@ namespace OsuCollabTool.Main_Classes.SongSetupFunc
         public BPMDetectorIntf()
         {
             InitializeComponent();
-
-            UIDataExtractor ext = new UIDataExtractor();
-            string[] files = Directory.GetFiles($@"{ext.GetSongFol()}{ext.GetCurrFol()}");
-
-            // Theme
-            Color[] theme = ext.GetTheme();
-            Common.SetBGCol(theme[2], BtmBG, MainBG);
-            Common.SetBtnCol(theme[1], DetectBPM, QuickScan);
-            Common.ContrastColor(theme[1], DetectBPM, QuickScan);
-            Common.ContrastColor(theme[2], l1, l2, l3, l4, l5, l6, l7, l8, MaxDurStart, MaxDurUntil, ResultBPMPanel, ResultBPM);
-
-            foreach (string file in files)
-            {
-                if (file.Contains(".mp3"))
-                {
-                    audioDir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}\{Path.GetFileName(file)}";
-                }
-            }
             try
             {
+                UIDataExtractor ext = new UIDataExtractor();
+                string[] files = Directory.GetFiles($@"{ext.GetSongFol()}{ext.GetCurrFol()}");
+
+                // Theme
+                Color[] theme = ext.GetTheme();
+                Common.SetBGCol(theme[2], BtmBG, MainBG);
+                Common.SetBtnCol(theme[1], DetectBPM, QuickScan);
+                Common.ContrastColor(theme[1], DetectBPM, QuickScan);
+                Common.ContrastColor(theme[2], l1, l2, l3, l4, l5, l6, l7, l8, MaxDurStart, MaxDurUntil, ResultBPMPanel, ResultBPM);
+
+                foreach (string file in files)
+                {
+                    if (file.Contains(".mp3"))
+                    {
+                        audioDir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}\{Path.GetFileName(file)}";
+                    }
+                }
+
                 AudioFileReader duration = new AudioFileReader(audioDir);
                 TimeSpan durationInt = duration.TotalTime;
                 totalTime = (int)durationInt.TotalSeconds;
@@ -96,10 +96,16 @@ namespace OsuCollabTool.Main_Classes.SongSetupFunc
         // Triggers the thread to the main process, with the difference that it is scanning a preset proportion of the audio
         private async void QuickScan_Click(object sender, EventArgs e)
         {
-            ResultBPM.Text = "Loading...";
-            ResultBPM.Text = $"{await Task.Run(QuickDetection)}";
+            try
+            {
+                ResultBPM.Text = "Loading...";
+                ResultBPM.Text = $"{await Task.Run(QuickDetection)}";
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
         }
-
 
         // The preset val if the user chooses to quick scan
         private int QuickDetection()

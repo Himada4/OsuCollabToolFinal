@@ -1,13 +1,13 @@
-﻿using System;
+﻿using NAudio.Wave;
+using OsuCollabTool.CoreClasses;
+using OsuCollabTool.UI;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NAudio.Wave;
-using OsuCollabTool.CoreClasses;
-using OsuCollabTool.UI;
 
 namespace OsuCollabTool.Main_Classes.HitsoundingFunc
 {
@@ -19,30 +19,29 @@ namespace OsuCollabTool.Main_Classes.HitsoundingFunc
         public VolumeToolIntf()
         {
             InitializeComponent();
-
-            UIDataExtractor ext = new UIDataExtractor();
-            string[] files = Directory.GetFiles($@"{ext.GetSongFol()}{ext.GetCurrFol()}");
-
-            // Theme
-            Color[] theme = ext.GetTheme();
-            Common.SetBGCol(theme[2], BG1, BG2);
-            Common.SetBtnCol(theme[1], ChangeVol);
-            Common.ContrastColor(theme[1], ChangeVol);
-            Common.ContrastColor(theme[2], Selector, Option1, Option2, Option3, ChangesBox, SetVal, ChangeVal, ChangeValLabel, SelectVolBox, l1, SelectVol, SelectTimestampBox, l3,l4,l5,l8,MaxDurStart,MaxDurUntil, l2, l6, l7);
-            
-            dir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}\{ext.GetCurrOsu()}";
-            string audioDir = string.Empty;
-
-            foreach (string file in files)
-            {
-                if (file.Contains(".mp3"))
-                {
-                    audioDir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}\{Path.GetFileName(file)}";
-                }
-            }
-
             try
             {
+                UIDataExtractor ext = new UIDataExtractor();
+                string[] files = Directory.GetFiles($@"{ext.GetSongFol()}{ext.GetCurrFol()}");
+
+                // Theme
+                Color[] theme = ext.GetTheme();
+                Common.SetBGCol(theme[2], BG1, BG2);
+                Common.SetBtnCol(theme[1], ChangeVol);
+                Common.ContrastColor(theme[1], ChangeVol);
+                Common.ContrastColor(theme[2], Selector, Option1, Option2, Option3, ChangesBox, SetVal, ChangeVal, ChangeValLabel, SelectVolBox, l1, SelectVol, SelectTimestampBox, l3, l4, l5, l8, MaxDurStart, MaxDurUntil, l2, l6, l7);
+
+                dir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}\{ext.GetCurrOsu()}";
+                string audioDir = string.Empty;
+
+                foreach (string file in files)
+                {
+                    if (file.Contains(".mp3"))
+                    {
+                        audioDir = $@"{ext.GetSongFol()}{ext.GetCurrFol()}\{Path.GetFileName(file)}";
+                    }
+                }
+
                 AudioFileReader duration = new AudioFileReader(audioDir);
                 TimeSpan durationInt = duration.TotalTime;
                 int totalTime = (int)durationInt.TotalMilliseconds;
@@ -64,7 +63,6 @@ namespace OsuCollabTool.Main_Classes.HitsoundingFunc
 
                 StartTrackBar.Scroll += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, StartTrackBar));
                 UntilTrackBar.Scroll += new EventHandler((sender, e) => TrackBar_TrackVal(sender, e, UntilTrackBar));
-
 
                 SelectVolBox.Enabled = false;
                 SelectTimestampBox.Enabled = false;
@@ -93,8 +91,6 @@ namespace OsuCollabTool.Main_Classes.HitsoundingFunc
             {
                 UntilTb.Text = track.Value.ToString();
             }
-
-            
         }
 
         // Tracks the textboxes
@@ -249,33 +245,40 @@ namespace OsuCollabTool.Main_Classes.HitsoundingFunc
         // Main trigger for process, but goes through exception check before executing
         private async void ChangeVol_Click(object sender, EventArgs e)
         {
-            if (SelectTimestampBox.Enabled && (SelectFromTb.Text == string.Empty || UntilTb.Text == string.Empty))
+            try
             {
-                MessageBox.Show(ExceptionsHandling.invalidInput.Message);
-            }
-            else if (SelectTimestampBox.Enabled && (Convert.ToInt32(SelectFromTb.Text) > Convert.ToInt32(UntilTb.Text)))
-            {
-                MessageBox.Show(ExceptionsHandling.invalidInput.Message);
-            }
-            else
-            {
-                ChangeVol.Text = "Processing...";
-                trackbarVal = TrackBarChanges.Value;
-                Exception exc = await Task.Run(StartChangeVol);
-
-                if (exc == null)
+                if (SelectTimestampBox.Enabled && (SelectFromTb.Text == string.Empty || UntilTb.Text == string.Empty))
                 {
-                    ChangeVol.Text = "Complete!";
-                    MessageBox.Show("Volume edit has been completed successfully!");
-
-                    ChangeVol.Text = "Make Changes!";
+                    MessageBox.Show(ExceptionsHandling.invalidInput.Message);
+                }
+                else if (SelectTimestampBox.Enabled && (Convert.ToInt32(SelectFromTb.Text) > Convert.ToInt32(UntilTb.Text)))
+                {
+                    MessageBox.Show(ExceptionsHandling.invalidInput.Message);
                 }
                 else
                 {
-                    ChangeVol.Text = "Error";
-                    MessageBox.Show(exc.Message);
-                    ChangeVol.Text = "Make Changes!";
+                    ChangeVol.Text = "Processing...";
+                    trackbarVal = TrackBarChanges.Value;
+                    Exception exc = await Task.Run(StartChangeVol);
+
+                    if (exc == null)
+                    {
+                        ChangeVol.Text = "Complete!";
+                        MessageBox.Show("Volume edit has been completed successfully!");
+
+                        ChangeVol.Text = "Make Changes!";
+                    }
+                    else
+                    {
+                        ChangeVol.Text = "Error";
+                        MessageBox.Show(exc.Message);
+                        ChangeVol.Text = "Make Changes!";
+                    }
                 }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
             }
         }
 
@@ -421,7 +424,7 @@ namespace OsuCollabTool.Main_Classes.HitsoundingFunc
 
                 return exc;
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 return exc;
             }

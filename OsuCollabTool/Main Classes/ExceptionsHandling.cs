@@ -17,5 +17,7 @@ namespace OsuCollabTool.Main_Classes
         public static Exception patternFileNotSelected = new Exception("Please select a pattern file!");
 
         public static Exception noFilesFound = new Exception("Please insert at least more than two files!");
+
+        public static Exception dirNull = new Exception("Please make sure to input the directories in Preferences!");
     }
 }
