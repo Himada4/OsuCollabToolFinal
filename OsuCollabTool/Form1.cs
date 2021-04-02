@@ -115,24 +115,26 @@ namespace OsuCollabTool
         {
             // Checks if any libraries are missing
             string[] libraries = Directory.GetFiles($@"{Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)}");
-            List<string> check = new List<string>() { "EditorReader.dll", "Microsoft.Win32.Registry.dll", "Microsoft.Win32.Registry.xml", "NAudio.Asio.dll", "NAudio.Core.dll", "NAudio.dll", "NAudio.Midi.dll", "NAudio.Wasapi.dll", "NAudio.WinForms.dll", "NAudio.WinMM.dll", "NAudio.xml", "OsuCollabTool.exe.config", "OsuCollabTool.pdb", "OsuMemoryDataProvider.dll", "ProcessMemoryDataFinder.dll", "System.Security.AccessControl.dll", "System.Security.AccessControl.xml", "System.Security.Principal.Windows.dll", "System.Security.Principal.Windows.xml" };
+            List<string> check = new List<string>() { "EditorReader.dll", "Microsoft.Win32.Registry.dll", "Microsoft.Win32.Registry.xml", "NAudio.Asio.dll", "NAudio.Core.dll", "NAudio.dll", "NAudio.Midi.dll", "NAudio.Wasapi.dll", "NAudio.WinForms.dll", "NAudio.WinMM.dll", "NAudio.xml", "OsuCollabTool.exe.config", "OsuCollabTool.pdb", "OsuMemoryDataProvider.dll", "ProcessMemoryDataFinder.dll", "System.Security.AccessControl.dll", "System.Security.AccessControl.xml", "System.Security.Principal.Windows.dll", "System.Security.Principal.Windows.xml"};
 
-            List<int> ind = new List<int>();
+            Stack<int> ind = new Stack<int>();
             foreach (var library in libraries)
             {
                 for (int i = 0; i < check.Count; i = i + 1)
                 {
                     if (check[i] == Path.GetFileName(library))
                     {
-                        ind.Add(i);
+                        ind.Push(i);
                         break;
                     }
                 }
             }
 
-            for (int i = ind.Count - 1; i >= 0; i = i - 1)
+            int stackLoop = ind.Count;
+
+            for (int i = 0; i < stackLoop; i = i + 1)
             {
-                check.RemoveAt(i);
+                check.RemoveAt(ind.Pop());
             }
 
             string missingFiles = string.Empty;
