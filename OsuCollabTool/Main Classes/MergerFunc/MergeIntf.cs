@@ -166,7 +166,6 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
 
                         List<string> tempHit = map.GetHitObjString();
                         tempHit.RemoveAt(0);
-                        tempHit.RemoveAt(tempHit.Count - 1);
                         allHitObjects.Add(tempHit);
                     }
 
