@@ -19,5 +19,7 @@ namespace OsuCollabTool.Main_Classes
         public static Exception noFilesFound = new Exception("Please insert at least more than two files!");
 
         public static Exception dirNull = new Exception("Please make sure to input the directories in Preferences!");
+
+        public static Exception deleteAll = new Exception("You cannot delete all points at once!");
     }
 }

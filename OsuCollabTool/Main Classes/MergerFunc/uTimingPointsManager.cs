@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using OsuCollabTool.Main_Classes;
 
 namespace OsuCollabTool.Main_Classes.MergerFunc
 {
@@ -78,7 +79,10 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
             }
             if (noneSelected == 0)
             {
-                MessageBox.Show("Please select at least one item to delete!");
+                throw ExceptionsHandling.selectedNone;
+            } else if (noneSelected == uTimingPointsListBox.Items.Count)
+            {
+                throw ExceptionsHandling.deleteAll;
             }
             else
             {
