@@ -314,7 +314,7 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
                 }
                 else if ((sender as TextBox).Name == "UntilTb")
                 {
-                    SeperateFromTb.Text = (ConvertToFormattedOffset(SeperateFromTb.Text)).ToString();
+                    UntilTb.Text = (ConvertToFormattedOffset(UntilTb.Text)).ToString();
 
                     UntilTrackBar.Value = Convert.ToInt32(UntilTb.Text);
                 }

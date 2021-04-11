@@ -122,10 +122,11 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
             }
         }
 
+        Exception excReturn = null;
         // Actual Process for the comparison
         private Exception StartCompare()
         {
-            Exception exc = null;
+            
 
             try
             {
@@ -199,15 +200,16 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
                             MessageBox.Show(error2);
                         }
 
+                        eBox.FormClosed += new FormClosedEventHandler(EBoxFormClosed);
                         Invoke((Action)(() => { eBox.ShowDialog(); }));
                     }
                 }
                 else
                 {
-                    exc = ExceptionsHandling.moreThan2Objects;
+                    excReturn = ExceptionsHandling.moreThan2Objects;
                 }
 
-                return exc;
+                return excReturn;
             }
             catch (Exception ex)
             {
@@ -264,5 +266,11 @@ namespace OsuCollabTool.Main_Classes.MergerFunc
 
             return results;
         }
+
+        private void EBoxFormClosed(object sender, FormClosedEventArgs e) 
+        {
+            CompareButton.Text = "Compare!";
+        }
+
     }
 }
